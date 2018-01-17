@@ -1,0 +1,45 @@
+div.wrapper
+  h1 DSDP API Response Times
+  div
+    p Results of #{numberOfRequests} requests sent over #{testDuration} seconds to endpoint: #{apiUrl}
+    p #{failed.length} requests failed
+    p Slowest response time was #{slowestResponse}ms
+    p Fastest response time was #{fastestResponse}ms
+    p Average response time was #{averageResponseTime}ms
+  div(class="chart")        
+    canvas(id="chartPic" width="400" height="400")
+
+script(src="node_modules/chart.js/dist/Chart.bundle.js")
+script.
+  window.onload = function() {
+    const ctx = document.getElementById("chartPic").getContext('2d');
+    const chart = new Chart(ctx,  {
+      type: 'line',
+      data: {
+        labels: [!{Array.from(new Array(responseTimes.length),(val,index)=>index+1)}],
+        datasets: [{
+          data: [!{responseTimes}],
+          borderWidth: 1
+        }],
+      },
+      options: {
+        maintainAspectRatio: false,
+        legend: {
+          display: false,
+        },
+        title: { 
+          display: true,
+          text: "Response times",
+          fontSize: 16,
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              suggestedMax: !{averageResponseTime * 2},
+            }
+          }]
+        }
+      }
+    });
+  };
