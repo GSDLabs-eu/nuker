@@ -1,0 +1,24 @@
+{
+  "name": "dsdp-loadtest",
+  "version": "0.0.0",
+  "description": "load tester for dsdp api",
+  "main": "index.js",
+  "engines": {
+    "node": ">=7.6.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Bater <david.bater@gsdlabs.eu>",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "eslint": "^4.15.0",
+    "eslint-plugin-node": "^5.2.1"
+  },
+  "dependencies": {
+    "chart.js": "^2.7.1",
+    "pug": "^2.0.0-rc.4",
+    "request-promise": "^4.2.2"
+  }
+}
