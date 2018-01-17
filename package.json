@@ -19,6 +19,7 @@
   "dependencies": {
     "chart.js": "^2.7.1",
     "pug": "^2.0.0-rc.4",
+    "request": "^2.83.0",
     "request-promise": "^4.2.2"
   }
 }
