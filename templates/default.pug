@@ -1,7 +1,7 @@
 div.wrapper
-  h1 DSDP API Response Times
+  h1 API Response Times for: #{apiUri}
   div
-    p Results of #{numberOfRequests} requests sent over #{testDuration} seconds to endpoint: #{apiUrl}
+    p Results of #{requestCount} requests sent over #{testDurationSeconds} seconds 
     p #{failed.length} requests failed
     p Slowest response time was #{slowestResponse}ms
     p Fastest response time was #{fastestResponse}ms

@@ -1,7 +1,7 @@
 {
-  "name": "dsdp-loadtest",
+  "name": "gsd-loadtest",
   "version": "0.0.0",
-  "description": "load tester for dsdp api",
+  "description": "command line tool for measuring form data response times",
   "main": "index.js",
   "engines": {
     "node": ">=7.6.0"
@@ -9,15 +9,24 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "loadtest": "./bin/loadtest.js"
+  },
   "author": "David Bater <david.bater@gsdlabs.eu>",
   "license": "UNLICENSED",
   "devDependencies": {
     "babel-eslint": "^8.2.1",
+    "babel-preset-airbnb": "^2.4.0",
+    "babel-preset-env": "^1.6.1",
     "eslint": "^4.15.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1"
   },
   "dependencies": {
     "chart.js": "^2.7.1",
+    "command-line-args": "^5.0.1",
+    "mime-types": "^2.1.17",
     "pug": "^2.0.0-rc.4",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"

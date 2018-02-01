@@ -3,9 +3,16 @@
   "env": {"es6": true},
   "parserOptions": {"ecmaVersion": 2017},
   "plugins": ["node"],
-  "extends": ["eslint:recommended", "plugin:node/recommended"],
+  "extends": "airbnb-base",
   "rules": {
     "node/exports-style": ["error", "module.exports"],
-    "no-console": 0
+    "no-console": 0,
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreComments": true
+      }
+    ]
   }
 }
