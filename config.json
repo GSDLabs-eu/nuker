@@ -1,0 +1,12 @@
+{
+  "host": "http://localhost:9191",
+  "path": "matchface",
+  "payloadPaths": {
+    "file": "example.jpg",
+    "file2": "example.jpg"
+  },
+  "requestMethod": "POST",
+  "requestCount": 5,
+  "testDurationSeconds": 5,
+  "verbose": false
+}

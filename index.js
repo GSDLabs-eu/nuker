@@ -1,3 +1,3 @@
-const request = require('./lib/request');
+const makeRequests = require('./lib/makeRequests');
 
-module.exports.performTest = request.performTest;
+module.exports.performTest = makeRequests.performTest;

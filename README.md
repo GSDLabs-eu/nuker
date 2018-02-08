@@ -1,17 +1,32 @@
-#Loadtest
+# FormData load tester for Node
 Command line tool to measure and display API response times for FormData requests.
 
-#Usage:
-1) Clone the repo and run `npm install -g`
-2) Run `loadtest` with the following arguments. Specifying a hostname, path and either at least one file path or key/value pair is mandatory. To use multiple files or multiple key/value pairs, just use the argument again, e.g.: `-f image.jpg -f image2.jpg`
+## Usage:
+1) Clone the repo and run `npm install -g`, so you can use the 'loadtest' command.
 
-    -h Hostname         Specify the hostname (without http://)
-    -p Path             Specify the path (without /)
-    -f File             [EITHER, OR BOTH] Path of the file(s) to append to form data. (`-f file=image.jpg`, where 'file will be the key in the FormData and image.jpg is the relative file path')
-    -k Key/value pair   [EITHER, OR BOTH] Key/value pair(s) (`-k key=value`)
-    -m Method           [OPTIONAL] Request method, default is POST
-    -c Count            [OPTIONAL] Number of requests to send, default is 10
-    -d Duration         [OPTIONAL] Duration of the test in seconds, default is 10
+2) Run `loadtest` and specify the target server's hostname, path, and some kind of form data (files and/or key-value pairs). You can either do this with command line arguments, or you may use a config file.
 
+
+Command line:
+
+The following arguments are available:
+
+* -h    Hostname    Specify the hostname (e.g.: `http://localhost:port`, `https://myhost`, `myhost:port`)
+* -p    Path        Specify the endpoint path (e.g.: `path`, or `/path/morepath`)
+* -f    File        Path to the file(s) to append to the FormData. (`-f file=image.jpg`, where 'file will be the key in the FormData and image.jpg is the file path')
+* -k    Key-value   Key/value pair(s) (`-k key=value -k anotherkey=anothervalue`)
+* -m    Method      [Optional] Request method, default is 'POST'
+* -c    Count       [Optional] Number of requests to send, default is 10
+* -d    Duration    [Optional] Duration of the test in seconds, default is 10
+* --verbose         [Optional] Extended logging during execution
+
+To use multiple files or key-value pairs, just duplicate the argument. e.g.: `-f file=image.jpg -f file2=image2.jpg`
+
+
+Config file:
+
+Config is a JSON file, storing the same variables that would otherwise be input via the command line. An example file is provided in the project root folder, you should simply edit that one.
+You can run the load tests with the JSON file using `loadtest --config path/to/config.json`
+`--verbose` is also available when using a config file.
 
 3) Results will be logged to a results.html file in the root directory.
