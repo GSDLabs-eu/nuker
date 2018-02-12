@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
 const commandLineArgs = require('command-line-args');
-const fs = require('fs');
-const _ = require('lodash');
-const performTest = require('../lib/makeRequests');
-const exportToFile = require('../lib/template');
-const { parsePayload } = require('../lib/utils');
-const { normalizeUrl } = require('../lib/utils');
-const { log } = require('../lib/logger');
+const { runTest } = require('../index');
+const { exportResults } = require('../lib/exportResults');
+const { parsePayload, normalizeUrl, readConfigFile } = require('../lib/utils');
+const { log, initLogger } = require('../lib/logger');
 
-let config = {};
+const DEFAULT_REQUEST_COUNT = 10;
+const DEFAULT_TEST_DURATION = 10;
 
 const argumentDefinitions = [
   { name: 'host', alias: 'h', type: String },
@@ -33,36 +31,34 @@ const argumentDefinitions = [
   { name: 'config', type: String },
 ];
 const args = commandLineArgs(argumentDefinitions);
+initLogger(args.verbose);
 
-function argsFromFile() {
+async function argsFromFile() {
   let configFile = {};
   try {
-    configFile = JSON.parse(fs.readFileSync(args.config));
+    configFile = await readConfigFile(args.config);
   } catch (error) {
     log('Could not find config.json file. Please make sure you got the path right!');
     process.exit(1);
   }
   const apiUrl = normalizeUrl(configFile.host, configFile.path);
-  const payloadPaths = [];
-  const keyValuePairs = [];
-  if (configFile.payloadPaths) {
-    _.mapKeys(configFile.payloadPaths, (value, key) => payloadPaths.push({ key, value }));
-  } else if (configFile.keyValuePairs) {
-    _.mapKeys(configFile.keyValuePairs, (value, key) => keyValuePairs.push({ key, value }));
-  } else {
-    log('Config file must contain at lest one file or key/value pair for the FormData');
+  const payloadPaths = Object.keys(configFile.payloadPaths || {})
+    .map(key => ({ key, value: configFile.payloadPaths[key] }));
+  const keyValuePairs = Object.keys(configFile.keyValuePairs || {})
+    .map(key => ({ key, value: configFile.keyValuePairs[key] }));
+  if (payloadPaths.length === 0 && keyValuePairs.length === 0) {
+    log('Config file must contain at least one file or key/value pair for the FormData');
     process.exit(1);
   }
-  config = {
+  return {
     apiUrl,
     payloadPaths,
     keyValuePairs,
     requestMethod: 'POST',
     requestCount: configFile.requestCount,
     testDurationSeconds: configFile.testDurationSeconds,
-    verbose: args.verbose || false,
+    verbose: !!args.verbose,
   };
-  return config;
 }
 
 function argsFromCommandLine() {
@@ -71,39 +67,25 @@ function argsFromCommandLine() {
     process.exit(1);
   }
 
-  let payloadPaths = [];
-  if (args.file) {
-    payloadPaths = parsePayload(args.file);
-  }
-
-  let keyValuePairs = [];
-  if (args.keyvalue) {
-    keyValuePairs = parsePayload(args.keyvalue);
-  }
-
+  const payloadPaths = parsePayload(args.file || []);
+  const keyValuePairs = parsePayload(args.keyvalue || []);
   const apiUrl = normalizeUrl(args.host, args.path);
 
-  config = {
+  return {
     apiUrl,
     payloadPaths,
     keyValuePairs,
     requestMethod: 'POST',
-    requestCount: args.count || 10,
-    testDurationSeconds: args.duration || 10,
+    requestCount: args.count || DEFAULT_REQUEST_COUNT,
+    testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
     verbose: args.verbose || false,
   };
-  return config;
-}
-
-if (args.config) {
-  argsFromFile();
-} else {
-  argsFromCommandLine();
 }
 
 async function loadTest() {
-  const responseData = await performTest(config);
-  exportToFile(responseData);
+  const config = args.config ? await argsFromFile() : argsFromCommandLine();
+  const responseData = await runTest(config);
+  exportResults(responseData);
 }
 
 loadTest();
