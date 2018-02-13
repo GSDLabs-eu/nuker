@@ -3,7 +3,7 @@
 const commandLineArgs = require('command-line-args');
 const { runTest } = require('../index');
 const { exportResults } = require('../lib/exportResults');
-const { parsePayload, normalizeUrl, readConfigFile } = require('../lib/utils');
+const { parsePayload, normalizeUrl, readFile } = require('../lib/utils');
 const { log, initLogger } = require('../lib/logger');
 
 const DEFAULT_REQUEST_COUNT = 10;
@@ -24,7 +24,6 @@ const argumentDefinitions = [
     type: String,
     multiple: true,
   },
-  { name: 'method', alias: 'm', type: String },
   { name: 'count', alias: 'c', type: Number },
   { name: 'duration', alias: 'd', type: Number },
   { name: 'verbose', type: Boolean },
@@ -36,12 +35,12 @@ initLogger(args.verbose);
 async function argsFromFile() {
   let configFile = {};
   try {
-    configFile = await readConfigFile(args.config);
+    configFile = await readFile(args.config);
   } catch (error) {
-    log('Could not find config.json file. Please make sure you got the path right!');
+    log('Could not read config file.');
     process.exit(1);
   }
-  const apiUrl = normalizeUrl(configFile.host, configFile.path);
+  const apiUrl = normalizeUrl(configFile.host, configFile.path || '');
   const payloadPaths = Object.keys(configFile.payloadPaths || {})
     .map(key => ({ key, value: configFile.payloadPaths[key] }));
   const keyValuePairs = Object.keys(configFile.keyValuePairs || {})
@@ -55,21 +54,20 @@ async function argsFromFile() {
     payloadPaths,
     keyValuePairs,
     requestMethod: 'POST',
-    requestCount: configFile.requestCount,
-    testDurationSeconds: configFile.testDurationSeconds,
-    verbose: !!args.verbose,
+    requestCount: configFile.requestCount || DEFAULT_REQUEST_COUNT,
+    testDurationSeconds: configFile.testDurationSeconds || DEFAULT_TEST_DURATION,
   };
 }
 
 function argsFromCommandLine() {
-  if (!args.host || !args.path || (!args.file && !args.keyvalue)) {
-    log('You must specity a hostname, a path, and at least one file or key/value pair.');
+  if (!args.host || (!args.file && !args.keyvalue)) {
+    log('You must specity a hostname and at least one file or key/value pair.');
     process.exit(1);
   }
 
   const payloadPaths = parsePayload(args.file || []);
   const keyValuePairs = parsePayload(args.keyvalue || []);
-  const apiUrl = normalizeUrl(args.host, args.path);
+  const apiUrl = normalizeUrl(args.host, args.path || '');
 
   return {
     apiUrl,
@@ -78,7 +76,6 @@ function argsFromCommandLine() {
     requestMethod: 'POST',
     requestCount: args.count || DEFAULT_REQUEST_COUNT,
     testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
-    verbose: args.verbose || false,
   };
 }
 

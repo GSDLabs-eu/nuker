@@ -18,11 +18,13 @@ async function runTest({
     testDurationSeconds,
   );
   const responseTimes = Object.values(response.successful);
+  const failedCount = Object.keys(response.failed).length;
+
   if (responseTimes.length === 0) {
-    log('Every request has been rejected or timed out.');
+    log('All requests have failed');
     process.exit(1);
   }
-  const failed = Object.keys(response.failed);
+
   const responseData = {
     requestCount,
     testDurationSeconds,
@@ -31,11 +33,11 @@ async function runTest({
     averageResponseTime: (responseTimes.reduce((a, b) => a + b) / responseTimes.length).toFixed(0),
     slowestResponse: Math.max(...responseTimes),
     fastestResponse: Math.min(...responseTimes),
-    failed,
+    failedCount,
   };
 
   debug(`Successful: ${responseData.responseTimes.length}`);
-  debug(`Failed: ${responseData.failed.length}`);
+  debug(`Failed: ${failedCount}`);
   return responseData;
 }
 

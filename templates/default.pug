@@ -1,8 +1,8 @@
 div.wrapper
-  h1 API Response Times for: #{apiUri}
+  h1 API Response Times for: #{apiUrl}
   div
     p Results of #{requestCount} requests sent over #{testDurationSeconds} seconds 
-    p #{failed.length} requests failed
+    p #{failedCount} requests failed
     p Slowest response time was #{slowestResponse}ms
     p Fastest response time was #{fastestResponse}ms
     p Average response time was #{averageResponseTime}ms
