@@ -9,7 +9,7 @@ div.wrapper
   div(class="chart")        
     canvas(id="chartPic" width="400" height="400")
 
-script(src="node_modules/chart.js/dist/Chart.bundle.js")
+script(src=chartJsPath)
 script.
   window.onload = function() {
     const ctx = document.getElementById("chartPic").getContext('2d');

@@ -15,7 +15,7 @@ The following arguments are available:
 * -f    File        Path to the file(s) to append to the FormData. (`-f file=image.jpg`, where 'file will be the key in the FormData and image.jpg is the file path')
 * -k    Key-value   Key/value pair(s) (`-k key=value -k anotherkey=anothervalue`)
 * -c    Count       [Optional] Number of requests to send, default is 10
-* -d    Duration    [Optional] Duration of the test in seconds, default is 10
+* -t    Duration    [Optional] Duration of the test in seconds, default is 10
 * --verbose         [Optional] Extended logging during execution
 
 To use multiple files or key-value pairs, just duplicate the argument. e.g.: `-f file=image.jpg -f file2=image2.jpg`

@@ -8,6 +8,8 @@ const { log, initLogger } = require('../lib/logger');
 
 const DEFAULT_REQUEST_COUNT = 10;
 const DEFAULT_TEST_DURATION = 10;
+const DEFAULT_OUTPUT_PATH = '';
+const DEFAULT_OUTPUT_NAME = 'results';
 
 const argumentDefinitions = [
   { name: 'host', alias: 'h', type: String },
@@ -25,9 +27,11 @@ const argumentDefinitions = [
     multiple: true,
   },
   { name: 'count', alias: 'c', type: Number },
-  { name: 'duration', alias: 'd', type: Number },
+  { name: 'duration', alias: 't', type: Number },
   { name: 'verbose', type: Boolean },
   { name: 'config', type: String },
+  { name: 'outpath', type: String },
+  { name: 'outname', type: String },
 ];
 const args = commandLineArgs(argumentDefinitions);
 initLogger(args.verbose);
@@ -56,6 +60,8 @@ async function argsFromFile() {
     requestMethod: 'POST',
     requestCount: configFile.requestCount || DEFAULT_REQUEST_COUNT,
     testDurationSeconds: configFile.testDurationSeconds || DEFAULT_TEST_DURATION,
+    outputPath: configFile.outputPath || DEFAULT_OUTPUT_PATH,
+    outputName: `${configFile.outputName || DEFAULT_OUTPUT_NAME}.html`,
   };
 }
 
@@ -76,13 +82,15 @@ function argsFromCommandLine() {
     requestMethod: 'POST',
     requestCount: args.count || DEFAULT_REQUEST_COUNT,
     testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
+    outputPath: args.outpath || DEFAULT_OUTPUT_PATH,
+    outputName: `${args.outname || DEFAULT_OUTPUT_NAME}.html`,
   };
 }
 
 async function loadTest() {
   const config = args.config ? await argsFromFile() : argsFromCommandLine();
   const responseData = await runTest(config);
-  exportResults(responseData);
+  await exportResults(responseData, config.outputPath, config.outputName);
 }
 
 loadTest();

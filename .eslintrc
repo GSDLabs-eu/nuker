@@ -5,6 +5,7 @@
   "plugins": ["node"],
   "extends": "airbnb-base",
   "rules": {
+    "linebreak-style": 0,
     "node/exports-style": ["error", "module.exports"],
     "no-console": 0,
     "max-len": [

@@ -6,5 +6,7 @@
   },
   "requestMethod": "POST",
   "requestCount": 5,
-  "testDurationSeconds": 5
+  "testDurationSeconds": 5,
+  "outputPath": "resultsfolder",
+  "outputName": "resultsfile"
 }
