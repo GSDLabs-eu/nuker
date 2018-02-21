@@ -13,6 +13,7 @@ const DEFAULT_OUTPUT_PATH = './results.html';
 const argumentDefinitions = [
   { name: 'host', alias: 'h', type: String },
   { name: 'path', alias: 'p', type: String },
+  { name: 'query', alias: 'q', type: String },
   {
     name: 'file',
     alias: 'f',
@@ -42,7 +43,7 @@ async function argsFromFile() {
     log('Could not read config file.');
     process.exit(1);
   }
-  const apiUrl = normalizeUrl(configFile.host, configFile.path || '');
+  const apiUrl = normalizeUrl(configFile.host, configFile.path || '', configFile.query || '');
   const payloadPaths = Object.keys(configFile.payloadPaths || {})
     .map(key => ({ key, value: configFile.payloadPaths[key] }));
   const keyValuePairs = Object.keys(configFile.keyValuePairs || {})
@@ -70,7 +71,7 @@ function argsFromCommandLine() {
 
   const payloadPaths = parsePayload(args.file || []);
   const keyValuePairs = parsePayload(args.keyvalue || []);
-  const apiUrl = normalizeUrl(args.host, args.path || '');
+  const apiUrl = normalizeUrl(args.host, args.path || '', args.query || '');
 
   return {
     apiUrl,

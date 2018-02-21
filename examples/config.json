@@ -1,6 +1,7 @@
 {
-  "host": "http://localhost:9191",
-  "path": "matchface",
+  "host": "http://localhost:9000",
+  "path": "",
+  "query": "?wait=10000&errorCode=555",
   "payloadPaths": {
     "file": "./examples/example.jpg"
   },
