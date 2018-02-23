@@ -1,11 +1,22 @@
 {
   "host": "http://localhost:4343",
   "path": "",
-  "payloadPaths": {
-    "file": "./examples/example.jpg"
+  "queries": {
+    "wait": "300"
   },
   "requestMethod": "POST",
+  "formFields": {
+    "name": "Samoa Joe"
+  },
+  "formFiles": {
+    "file": "examples/example.jpg"
+  },
+  "body": "",
+  "bodyPath": "",
   "requestCount": 5,
   "testDurationSeconds": 5,
-  "outputPath": ""
+  "outputPath": "",
+  "headers": {
+    "content-type": "multipart/form-data"
+  }
 }

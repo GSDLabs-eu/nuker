@@ -3,16 +3,24 @@ const { log, debug } = require('./lib/logger');
 
 async function runTest({
   apiUrl,
-  payloadPaths,
-  keyValuePairs,
+  queries,
+  formFields,
+  formFiles,
+  bodyText,
+  bodyPath,
+  headers,
   requestMethod,
   requestCount,
   testDurationSeconds,
 }) {
   const response = await makeRequests(
     apiUrl,
-    payloadPaths,
-    keyValuePairs,
+    queries,
+    formFields,
+    formFiles,
+    bodyText,
+    bodyPath,
+    headers,
     requestMethod,
     requestCount,
     testDurationSeconds,
