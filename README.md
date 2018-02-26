@@ -35,6 +35,6 @@ Run with `loadtest --config ./examples/config.json`
 ## Test server:
 
 The repo contains a basic test server with configurable response times and codes.
-Use `npm run server` to start on `localhost:9000`.
+Use `npm run server` to start on `localhost:4343`.
 
-You can configure the responses with query strings, e.g. `?wait:3000&responseCode:250` will delay a 250 response by 3000ms.
+You can configure the responses with query strings, e.g. `?wait=3000&responseCode=202` will delay a 202 response by 3000ms. If not specified otherwise, a 200 response will be returned.

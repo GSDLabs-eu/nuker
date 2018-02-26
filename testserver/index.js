@@ -3,7 +3,7 @@ const { wait } = require('../lib/utils');
 
 const server = Hapi.server({
   host: 'localhost',
-  port: 9000,
+  port: 4343,
 });
 
 server.route({
@@ -12,7 +12,9 @@ server.route({
   handler: async function handler(request, h) {
     const timeout = request.query.wait || 0;
     const statusCode = parseInt(request.query.statusCode, 10) || 200;
-    const response = h.response({ timeout, statusCode });
+    const payload = { timeout, statusCode };
+
+    const response = h.response(payload);
     response.code(statusCode);
     await wait(timeout);
     return response;

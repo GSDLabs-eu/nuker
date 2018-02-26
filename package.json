@@ -22,12 +22,12 @@
     "eslint": "^4.15.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^5.2.1"
+    "eslint-plugin-node": "^5.2.1",
+    "hapi": "^17.2.0"
   },
   "dependencies": {
     "chart.js": "^2.7.1",
     "command-line-args": "^5.0.1",
-    "hapi": "^17.2.0",
     "mime-types": "^2.1.17",
     "pug": "^2.0.0-rc.4",
     "request": "^2.83.0",
