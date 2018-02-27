@@ -1,30 +1,8 @@
 const { makeRequests } = require('./lib/makeRequests');
 const { log, debug } = require('./lib/logger');
 
-async function runTest({
-  apiUrl,
-  queries,
-  formFields,
-  formFiles,
-  bodyText,
-  bodyPath,
-  headers,
-  requestMethod,
-  requestCount,
-  testDurationSeconds,
-}) {
-  const response = await makeRequests(
-    apiUrl,
-    queries,
-    formFields,
-    formFiles,
-    bodyText,
-    bodyPath,
-    headers,
-    requestMethod,
-    requestCount,
-    testDurationSeconds,
-  );
+async function runTest(config) {
+  const response = await makeRequests(config);
   const responseTimes = Object.values(response.successful);
   const failedCount = Object.keys(response.failed).length;
 
@@ -34,9 +12,9 @@ async function runTest({
   }
 
   const responseData = {
-    requestCount,
-    testDurationSeconds,
-    apiUrl,
+    requestCount: config.requestCount,
+    testDurationSeconds: config.testDurationSeconds,
+    apiUrl: config.apiUrl,
     responseTimes,
     averageResponseTime: (responseTimes.reduce((a, b) => a + b) / responseTimes.length).toFixed(0),
     slowestResponse: Math.max(...responseTimes),

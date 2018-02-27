@@ -10,16 +10,18 @@ Command line tool to measure and display API response times for FormData request
 Command line:
 
 The following arguments are available:
-* -h    Hostname    Specify the hostname (e.g.: `http://localhost:port`, `https://myhost`, `myhost:port`)
-* -p    Path        [Optional] Specify the endpoint path (e.g.: `path`, or `/path/morepath`)
-* -f    File        Path to the file(s) to append to the FormData. (`-f file=image.jpg`, where 'file will be the key in the FormData and image.jpg is the file path')
-* -k    Key-value   Key/value pair(s) (`-k key=value -k anotherkey=anothervalue`)
-* -c    Count       [Optional] Number of requests to send, default is 10
-* -t    Duration    [Optional] Duration of the test in seconds, default is 10
-* --verbose         [Optional] Extended logging during execution
+* -h    Hostname    [Mandatory] Specify the hostname (e.g.: `-h http://localhost:port`, `-h https://myhost`, `-h myhost:port`)
+* -p    Path        Specify the endpoint path (e.g.: `-p path/morepath`)
+* -q    Query       Add (multiple) query parameters in `key=value` format (e.g.: `-q wait=3000 -q responseCode=404`)
+* -m    Method      Request method (e.g.: `-m POST`)
+* -f    Form field  Add form field(s) (`-f field=value -f anotherfield=anothervalue`)
+* -F    Form file   Path of the file(s) to append if you are sending FormData (`-F file=image.jpg`, where 'file' will be the field in the FormData and 'image.jpg' is the file path)
+* -b    Body text   Text that you want to add to the request body as a string (e.g.: `-b "this might be a JSON as well"`)
+* -B    Body path   If you want to add a binary file as a body, specify the path here (e.g.: `-B examples/example.txt`)
+* -c    Count       Number of requests to send, default is 10
+* -d    Duration    Duration of the test in seconds, default is 10
+* --verbose         Extended logging during execution
 * --outpath         [Optional] Specify the path of the output file (e.g.: `--outpath folder/filename.html`). Folder must exist in your file system.
-
-To use multiple files or key-value pairs, just duplicate the argument. e.g.: `-f file=image.jpg -f file2=image2.jpg`
 
 
 Config file:

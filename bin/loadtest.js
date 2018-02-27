@@ -71,7 +71,7 @@ async function argsFromFile() {
     body: configFile.body || '',
     bodyPath: configFile.bodyPath || '',
     headers,
-    requestMethod: configFile.method || 'GET',
+    requestMethod: configFile.requestMethod || 'GET',
     requestCount: configFile.requestCount || DEFAULT_REQUEST_COUNT,
     testDurationSeconds: configFile.testDurationSeconds || DEFAULT_TEST_DURATION,
     outputPath: configFile.outputPath || DEFAULT_OUTPUT_PATH,
