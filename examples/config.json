@@ -1,7 +1,6 @@
 {
   "host": "http://localhost:4343",
   "path": "",
-  "query": "?wait=2000&statusCode=404",
   "payloadPaths": {
     "file": "./examples/example.jpg"
   },

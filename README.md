@@ -12,7 +12,6 @@ Command line:
 The following arguments are available:
 * -h    Hostname    Specify the hostname (e.g.: `http://localhost:port`, `https://myhost`, `myhost:port`)
 * -p    Path        [Optional] Specify the endpoint path (e.g.: `path`, or `/path/morepath`)
-* -q    Query       [Optional] Add a query string (e.g.: `?name=Han&nerfHerder=true`)
 * -f    File        Path to the file(s) to append to the FormData. (`-f file=image.jpg`, where 'file will be the key in the FormData and image.jpg is the file path')
 * -k    Key-value   Key/value pair(s) (`-k key=value -k anotherkey=anothervalue`)
 * -c    Count       [Optional] Number of requests to send, default is 10
