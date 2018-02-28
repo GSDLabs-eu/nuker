@@ -1,6 +1,6 @@
 {
   "name": "gsd-loadtest",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "command line tool for measuring form data response times",
   "main": "index.js",
   "engines": {
