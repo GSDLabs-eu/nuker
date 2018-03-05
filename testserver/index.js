@@ -1,6 +1,9 @@
 const Hapi = require('hapi');
 const { wait } = require('../lib/utils');
 
+const DEFAULT_TIMEOUT = 0;
+const DEFAULT_STATUS_CODE = 200;
+
 const server = Hapi.server({
   host: 'localhost',
   port: 4343,
@@ -9,9 +12,9 @@ const server = Hapi.server({
 server.route({
   method: '*',
   path: '/',
-  handler: async function handler(request, h) {
-    const timeout = request.query.wait || 0;
-    const statusCode = parseInt(request.query.statusCode, 10) || 200;
+  async handler(request, h) {
+    const timeout = request.query.wait || DEFAULT_TIMEOUT;
+    const statusCode = parseInt(request.query.statusCode, 10) || DEFAULT_STATUS_CODE;
     const payload = { timeout, statusCode };
 
     const response = h.response(payload);
