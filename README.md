@@ -17,7 +17,7 @@ The following arguments are available:
 * -c    Count       [Optional] Number of requests to send, default is 10
 * -t    Duration    [Optional] Duration of the test in seconds, default is 10
 * --verbose         [Optional] Extended logging during execution
-* --outpath         [Optional] Specify the path of the output file (e.g.: `--outpath folder/filename.html`). Folder must be existing in your file system.
+* --outpath         [Optional] Specify the path of the output file (e.g.: `--outpath folder/filename.html`). Folder must exist in your file system.
 
 To use multiple files or key-value pairs, just duplicate the argument. e.g.: `-f file=image.jpg -f file2=image2.jpg`
 
