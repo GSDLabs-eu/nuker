@@ -1,12 +1,11 @@
 {
   "host": "http://localhost:4343",
   "path": "",
-  "queries": {
-    "wait": "300"
-  },
+  "queries": {},
   "requestMethod": "POST",
   "formFields": {
-    "name": "Samoa Joe"
+    "name": "Samoa Joe",
+    "occupation": "wrestler"
   },
   "formFiles": {
     "file": "examples/example.jpg"
@@ -16,7 +15,5 @@
   "requestCount": 5,
   "testDurationSeconds": 5,
   "outputPath": "",
-  "headers": {
-    "content-type": "multipart/form-data"
-  }
+  "headers": {}
 }

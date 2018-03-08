@@ -4,8 +4,6 @@ const commandLineArgs = require('command-line-args');
 const { runTest } = require('../index');
 const { exportResults } = require('../lib/exportResults');
 const {
-  parseArgument,
-  parseConfigObject,
   normalizeUrl,
   readFile,
 } = require('../lib/utils');
@@ -14,6 +12,7 @@ const { log, initLogger } = require('../lib/logger');
 const DEFAULT_REQUEST_COUNT = 10;
 const DEFAULT_TEST_DURATION = 10;
 const DEFAULT_OUTPUT_PATH = './results.html';
+const DEFAULT_REQUEST_METHOD = 'GET';
 
 const argumentDefinitions = [
   { name: 'host', alias: 'h', type: String },
@@ -37,7 +36,7 @@ const argumentDefinitions = [
     type: String,
     multiple: true,
   },
-  { name: 'bodyText', alias: 'b', type: String },
+  { name: 'bodyString', alias: 'b', type: String },
   { name: 'bodyPath', alias: 'B', type: String },
   { name: 'count', alias: 'c', type: Number },
   { name: 'duration', alias: 't', type: Number },
@@ -57,25 +56,22 @@ async function argsFromFile() {
     log('Could not read config file.');
     process.exit(1);
   }
-  const apiUrl = normalizeUrl(configFile.host, configFile.path || '');
-  const queries = parseConfigObject(configFile.queries);
-  const formFields = parseConfigObject(configFile.formFields);
-  const formFiles = parseConfigObject(configFile.formFiles);
-  const headers = parseConfigObject(configFile.headers);
 
-  return {
-    apiUrl,
-    queries,
-    formFields,
-    formFiles,
-    body: configFile.body || '',
-    bodyPath: configFile.bodyPath || '',
-    headers,
-    requestMethod: configFile.requestMethod || 'GET',
+  const config = {
+    bodyString: configFile.body,
+    bodyPath: configFile.bodyPath,
+    requestMethod: configFile.requestMethod || DEFAULT_REQUEST_METHOD,
     requestCount: configFile.requestCount || DEFAULT_REQUEST_COUNT,
     testDurationSeconds: configFile.testDurationSeconds || DEFAULT_TEST_DURATION,
     outputPath: configFile.outputPath || DEFAULT_OUTPUT_PATH,
   };
+  config.apiUrl = normalizeUrl(configFile.host, configFile.path || '');
+  config.query = configFile.queries;
+  config.formFields = configFile.formFields;
+  config.formFiles = configFile.formFiles;
+  config.headers = configFile.headers;
+
+  return config;
 }
 
 function argsFromCommandLine() {
@@ -83,25 +79,34 @@ function argsFromCommandLine() {
     log('You must specity a hostname.');
     process.exit(1);
   }
-  const apiUrl = normalizeUrl(args.host, args.path || '');
-  const queries = parseArgument(args.query);
-  const formFields = parseArgument(args.formField);
-  const formFiles = parseArgument(args.formFile);
-  const headers = parseArgument(args.header);
 
-  return {
-    apiUrl,
-    queries,
-    formFields,
-    formFiles,
-    bodyText: args.bodyText || '',
-    bodyPath: args.bodyPath || '',
-    headers,
-    requestMethod: args.method || 'GET',
+  // Parses an array of "file=example.jpg" format arguments and returns an object { key: "file", value: "example.jpg" }
+  function parseArgument(array = []) {
+    const object = array.reduce((finalObject, next) => {
+      const [key, value] = next.split('=');
+      return {
+        ...finalObject,
+        [key]: value,
+      };
+    }, {});
+    return object;
+  }
+
+  const config = {
+    bodyString: args.bodyString,
+    bodyPath: args.bodyPath,
+    requestMethod: args.method || DEFAULT_REQUEST_METHOD,
     requestCount: args.count || DEFAULT_REQUEST_COUNT,
     testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
     outputPath: args.outpath || DEFAULT_OUTPUT_PATH,
   };
+  config.apiUrl = normalizeUrl(args.host, args.path || '');
+  config.query = parseArgument(args.query);
+  config.formFields = parseArgument(args.formField);
+  config.formFiles = parseArgument(args.formFile);
+  config.headers = parseArgument(args.header);
+
+  return config;
 }
 
 async function loadTest() {
