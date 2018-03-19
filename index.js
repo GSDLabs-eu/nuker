@@ -1,5 +1,5 @@
 const { makeRequests } = require('./lib/makeRequests');
-const { log, debug } = require('./lib/logger');
+const { log, logVerbose } = require('./lib/logger');
 
 async function runTest(config) {
   const response = await makeRequests(config);
@@ -22,8 +22,8 @@ async function runTest(config) {
     failedCount,
   };
 
-  debug(`Successful: ${responseData.responseTimes.length}`);
-  debug(`Failed: ${failedCount}`);
+  logVerbose(`Successful: ${responseData.responseTimes.length}`);
+  logVerbose(`Failed: ${failedCount}`);
   return responseData;
 }
 

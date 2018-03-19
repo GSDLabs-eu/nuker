@@ -7,7 +7,7 @@ const {
   normalizeUrl,
   readFile,
 } = require('../lib/utils');
-const { log, initLogger } = require('../lib/logger');
+const { logError, initLogger } = require('../lib/logger');
 
 const DEFAULT_REQUEST_COUNT = 10;
 const DEFAULT_TEST_DURATION = 10;
@@ -53,11 +53,24 @@ async function argsFromFile() {
   try {
     configFile = JSON.parse(await readFile(args.config));
   } catch (error) {
-    log('Could not read config file.');
+    logError('Could not read config file.');
+    process.exit(1);
+  }
+
+  if (!configFile.host) {
+    logError('You must specify a hostname.');
+    process.exit(1);
+  } else if (configFile.body && configFile.bodyPath) {
+    logError('Request body defined both as a string and a file');
     process.exit(1);
   }
 
   const config = {
+    apiUrl: normalizeUrl(configFile.host, configFile.path || ''),
+    query: configFile.query,
+    headers: configFile.headers,
+    formFields: configFile.formFields,
+    formFiles: configFile.formFiles,
     bodyString: configFile.body,
     bodyPath: configFile.bodyPath,
     requestMethod: configFile.requestMethod || DEFAULT_REQUEST_METHOD,
@@ -65,22 +78,17 @@ async function argsFromFile() {
     testDurationSeconds: configFile.testDurationSeconds || DEFAULT_TEST_DURATION,
     outputPath: configFile.outputPath || DEFAULT_OUTPUT_PATH,
   };
-  config.apiUrl = normalizeUrl(configFile.host, configFile.path || '');
-  config.query = configFile.queries;
-  config.formFields = configFile.formFields;
-  config.formFiles = configFile.formFiles;
-  config.headers = configFile.headers;
 
   return config;
 }
 
 function argsFromCommandLine() {
   if (!args.host) {
-    log('You must specity a hostname.');
+    logError('You must specify a hostname.');
     process.exit(1);
   }
 
-  // Parses an array of "file=example.jpg" format arguments and returns an object { key: "file", value: "example.jpg" }
+  // Parses an array of "file=example.jpg" format arguments and returns an object { file: example.jpg }
   function parseArgument(array = []) {
     const object = array.reduce((finalObject, next) => {
       const [key, value] = next.split('=');
@@ -93,18 +101,18 @@ function argsFromCommandLine() {
   }
 
   const config = {
+    apiUrl: normalizeUrl(args.host, args.path || ''),
+    query: parseArgument(args.query),
+    headers: parseArgument(args.header),
+    formFields: parseArgument(args.formField),
+    formFiles: parseArgument(args.formFile),
     bodyString: args.bodyString,
     bodyPath: args.bodyPath,
-    requestMethod: args.method || DEFAULT_REQUEST_METHOD,
+    requestMethod: args.count || DEFAULT_REQUEST_COUNT,
     requestCount: args.count || DEFAULT_REQUEST_COUNT,
     testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
     outputPath: args.outpath || DEFAULT_OUTPUT_PATH,
   };
-  config.apiUrl = normalizeUrl(args.host, args.path || '');
-  config.query = parseArgument(args.query);
-  config.formFields = parseArgument(args.formField);
-  config.formFiles = parseArgument(args.formFile);
-  config.headers = parseArgument(args.header);
 
   return config;
 }
