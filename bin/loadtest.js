@@ -68,19 +68,23 @@ async function argsFromFile() {
   }
 
   const config = {
-    apiUrl: normalizeUrl(configFile.host, configFile.path),
-    query: configFile.query,
-    headers: configFile.headers,
-    formFields: configFile.formFields,
-    formFiles: configFile.formFiles,
-    bodyString: configFile.body,
-    bodyPath: configFile.bodyPath,
-    requestMethod: configFile.requestMethod || DEFAULT_REQUEST_METHOD,
-    requestCount: configFile.requestCount || DEFAULT_REQUEST_COUNT,
-    testDurationSeconds: configFile.testDurationSeconds || DEFAULT_TEST_DURATION,
     outputPath: configFile.outputPath || DEFAULT_OUTPUT_PATH,
+    tests: [],
   };
-
+  configFile.tests.forEach((test) => {
+    config.tests.push({
+      apiUrl: normalizeUrl(configFile.host, test.path || ''),
+      query: test.query,
+      formFields: test.formFields,
+      formFiles: test.formFiles,
+      bodyString: test.bodyString,
+      bodyPath: test.bodyPath,
+      headers: test.headers,
+      requestMethod: test.requestMethod || DEFAULT_REQUEST_METHOD,
+      requestCount: test.requestCount || DEFAULT_REQUEST_COUNT,
+      testDurationSeconds: test.testDurationSeconds || DEFAULT_TEST_DURATION,
+    });
+  });
   return config;
 }
 
@@ -108,25 +112,29 @@ function argsFromCommandLine() {
   }
 
   const config = {
-    apiUrl: normalizeUrl(args.host, args.path),
-    query: parseArgument(args.query),
-    headers: parseArgument(args.header),
-    formFields: parseArgument(args.formField),
-    formFiles: parseArgument(args.formFile),
-    bodyString: args.body,
-    bodyPath: args.bodyPath,
-    requestMethod: args.method || DEFAULT_REQUEST_METHOD,
-    requestCount: args.count || DEFAULT_REQUEST_COUNT,
-    testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
     outputPath: args.outpath || DEFAULT_OUTPUT_PATH,
+    tests: [{
+      apiUrl: normalizeUrl(args.host, args.path),
+      query: parseArgument(args.query),
+      formFields: parseArgument(args.formField),
+      formFiles: parseArgument(args.formFile),
+      bodyString: args.bodyString,
+      bodyPath: args.bodyPath,
+      headers: parseArgument(args.header),
+      requestMethod: args.method || DEFAULT_REQUEST_METHOD,
+      requestCount: args.count || DEFAULT_REQUEST_COUNT,
+      testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
+    }],
   };
-
   return config;
 }
 
 async function loadTest() {
   const config = args.config ? await argsFromFile() : argsFromCommandLine();
-  const responseData = await runTest(config);
+  const responseData = [];
+  for (const test of config.tests) {
+    responseData.push(await runTest(test));
+  }
   exportResults(responseData, config.outputPath);
 }
 

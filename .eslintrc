@@ -1,6 +1,9 @@
 {
   "parser": "babel-eslint",
-  "env": {"es6": true},
+  "env": {
+    "es6": true,
+    "browser": true
+  },
   "parserOptions": {"ecmaVersion": 2017},
   "plugins": ["node"],
   "extends": "airbnb-base",
@@ -14,6 +17,8 @@
         "code": 120,
         "ignoreComments": true
       }
-    ]
+    ],
+    "no-restricted-syntax": 0,
+    "no-await-in-loop": 0
   }
 }

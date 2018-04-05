@@ -1,24 +1,22 @@
 const { makeRequests } = require('./lib/makeRequests');
-const { log, logVerbose } = require('./lib/logger');
+const { logVerbose } = require('./lib/logger');
 
-async function runTest(config) {
-  const response = await makeRequests(config);
+async function runTest(test) {
+  const response = await makeRequests(test);
   const responseTimes = Object.values(response.successful);
   const failedCount = Object.keys(response.failed).length;
 
-  if (responseTimes.length === 0) {
-    log('All requests have failed');
-    process.exit(1);
-  }
+  const hasResponseTimes = !!responseTimes.length;
 
   const responseData = {
-    requestCount: config.requestCount,
-    testDurationSeconds: config.testDurationSeconds,
-    apiUrl: config.apiUrl,
+    requestCount: test.requestCount,
+    testDurationSeconds: test.testDurationSeconds,
+    apiUrl: test.apiUrl,
     responseTimes,
-    averageResponseTime: (responseTimes.reduce((a, b) => a + b) / responseTimes.length).toFixed(0),
-    slowestResponse: Math.max(...responseTimes),
-    fastestResponse: Math.min(...responseTimes),
+    averageResponseTime: hasResponseTimes ?
+      (responseTimes.reduce((a, b) => a + b) / responseTimes.length).toFixed(0) : 0,
+    slowestResponse: hasResponseTimes ? Math.max(...responseTimes) : 0,
+    fastestResponse: hasResponseTimes ? Math.min(...responseTimes) : 0,
     failedCount,
   };
 

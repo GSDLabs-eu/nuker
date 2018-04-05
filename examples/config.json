@@ -1,22 +1,36 @@
 {
   "host": "http://localhost:4343",
-  "path": "",
-  "query": {},
-  "requestMethod": "POST",
-  "formFields": {
-    "name": "Samoa Joe",
-    "occupation": "wrestler"
-  },
-  "formFiles": {
-    "file": "examples/example.jpg"
-  },
-  "body": "",
-  "bodyPath": "",
-  "requestCount": 5,
-  "testDurationSeconds": 5,
   "outputPath": "",
-  "headers": {
-    "User-Agent": "Request-Promise",
-    "Accept-Charset": "utf-8"
-  }
+  "tests": [{
+    "path": "",
+    "query": {},
+    "requestMethod": "POST",
+    "formFields": {
+      "name": "Samoa Joe",
+      "occupation": "wrestler"
+    },
+    "formFiles": {
+      "file": "examples/example.jpg"
+    },
+    "body": "",
+    "bodyPath": "",
+    "requestCount": 5,
+    "testDurationSeconds": 5,
+    "headers": {}
+  },
+  {
+    "path": "",
+    "query": {},
+    "requestMethod": "POST",
+    "formFields": {
+      "name": "The Rock",
+      "occupation": "actor"
+    },
+    "formFiles": {},
+    "body": "",
+    "bodyPath": "",
+    "requestCount": 5,
+    "testDurationSeconds": 5,
+    "headers": {}
+  }]  
 }
