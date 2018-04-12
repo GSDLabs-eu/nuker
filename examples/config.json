@@ -1,7 +1,7 @@
 {
   "host": "http://localhost:4343",
   "path": "",
-  "queries": {},
+  "query": {},
   "requestMethod": "POST",
   "formFields": {
     "name": "Samoa Joe",
@@ -10,10 +10,13 @@
   "formFiles": {
     "file": "examples/example.jpg"
   },
-  "body": "",
+  "bodyString": "",
   "bodyPath": "",
   "requestCount": 5,
   "testDurationSeconds": 5,
   "outputPath": "",
-  "headers": {}
+  "headers": {
+    "User-Agent": "Request-Promise",
+    "Accept-Charset": "utf-8"
+  }
 }

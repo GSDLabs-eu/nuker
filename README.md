@@ -1,4 +1,4 @@
-# FormData load tester for Node
+# Node Load Tester
 Command line tool to measure and display API response times for FormData requests.
 
 ## Usage:
@@ -20,9 +20,9 @@ The following arguments are available:
 * -B    **Body path**   If you want to add a binary file as a body, specify the path here (e.g.: `-B examples/example.txt`)
 * -c    **Count**       Number of requests to send, default is 10
 * -d    **Duration**    Duration of the test in seconds, default is 10
+* **--header**          Specify headers to send the request with (e.g.: `-h Accept-Charset=utf-8, -h Accept-Language=en-US`)
 * **--verbose**         Extended logging during execution
 * **--outpath**         Specify the path of the output file (e.g.: `--outpath folder/filename.html`). Folder must exist in your file system.
-* **--header**          Specify headers to send the request with (e.g.: `-h Accept-Charset=utf-8, -h Accept-Language: en-US`)
 
 
 Config file:

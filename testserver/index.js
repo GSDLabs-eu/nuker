@@ -1,5 +1,6 @@
 const Hapi = require('hapi');
 const { wait } = require('../lib/utils');
+const { log, logError } = require('../lib/logger');
 
 const DEFAULT_TIMEOUT = 0;
 const DEFAULT_STATUS_CODE = 200;
@@ -28,10 +29,10 @@ async function start() {
   try {
     await server.start();
   } catch (err) {
-    console.log(err);
+    logError(err);
     process.exit(1);
   }
-  console.log('Server running at:', server.info.uri);
+  log(`Server running at: ${server.info.uri}`);
 }
 
 start();

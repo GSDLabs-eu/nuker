@@ -60,18 +60,18 @@ async function argsFromFile() {
   if (!configFile.host) {
     logError('You must specify a hostname.');
     process.exit(1);
-  } else if (configFile.body && configFile.bodyPath) {
-    logError('Request body defined both as a string and a file');
+  } else if (configFile.bodyString && configFile.bodyPath) {
+    logError('bodyString and bodyPath can\'t be present simultaneously');
     process.exit(1);
   }
 
   const config = {
-    apiUrl: normalizeUrl(configFile.host, configFile.path || ''),
+    apiUrl: normalizeUrl(configFile.host, configFile.path),
     query: configFile.query,
     headers: configFile.headers,
     formFields: configFile.formFields,
     formFiles: configFile.formFiles,
-    bodyString: configFile.body,
+    bodyString: configFile.bodyString,
     bodyPath: configFile.bodyPath,
     requestMethod: configFile.requestMethod || DEFAULT_REQUEST_METHOD,
     requestCount: configFile.requestCount || DEFAULT_REQUEST_COUNT,
@@ -85,6 +85,9 @@ async function argsFromFile() {
 function argsFromCommandLine() {
   if (!args.host) {
     logError('You must specify a hostname.');
+    process.exit(1);
+  } else if (args.bodyString && args.bodyPath) {
+    logError('bodyString and bodyPath can\'t be present simultaneously');
     process.exit(1);
   }
 
@@ -101,14 +104,14 @@ function argsFromCommandLine() {
   }
 
   const config = {
-    apiUrl: normalizeUrl(args.host, args.path || ''),
+    apiUrl: normalizeUrl(args.host, args.path),
     query: parseArgument(args.query),
     headers: parseArgument(args.header),
     formFields: parseArgument(args.formField),
     formFiles: parseArgument(args.formFile),
     bodyString: args.bodyString,
     bodyPath: args.bodyPath,
-    requestMethod: args.count || DEFAULT_REQUEST_COUNT,
+    requestMethod: args.method || DEFAULT_REQUEST_METHOD,
     requestCount: args.count || DEFAULT_REQUEST_COUNT,
     testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
     outputPath: args.outpath || DEFAULT_OUTPUT_PATH,
