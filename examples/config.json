@@ -10,7 +10,7 @@
   "formFiles": {
     "file": "examples/example.jpg"
   },
-  "bodyString": "",
+  "body": "",
   "bodyPath": "",
   "requestCount": 5,
   "testDurationSeconds": 5,

@@ -36,7 +36,7 @@ const argumentDefinitions = [
     type: String,
     multiple: true,
   },
-  { name: 'bodyString', alias: 'b', type: String },
+  { name: 'body', alias: 'b', type: String },
   { name: 'bodyPath', alias: 'B', type: String },
   { name: 'count', alias: 'c', type: Number },
   { name: 'duration', alias: 't', type: Number },
@@ -60,8 +60,10 @@ async function argsFromFile() {
   if (!configFile.host) {
     logError('You must specify a hostname.');
     process.exit(1);
-  } else if (configFile.bodyString && configFile.bodyPath) {
-    logError('bodyString and bodyPath can\'t be present simultaneously');
+  }
+
+  if (configFile.body && configFile.bodyPath) {
+    logError('body and bodyPath can\'t be present simultaneously');
     process.exit(1);
   }
 
@@ -71,7 +73,7 @@ async function argsFromFile() {
     headers: configFile.headers,
     formFields: configFile.formFields,
     formFiles: configFile.formFiles,
-    bodyString: configFile.bodyString,
+    bodyString: configFile.body,
     bodyPath: configFile.bodyPath,
     requestMethod: configFile.requestMethod || DEFAULT_REQUEST_METHOD,
     requestCount: configFile.requestCount || DEFAULT_REQUEST_COUNT,
@@ -86,8 +88,10 @@ function argsFromCommandLine() {
   if (!args.host) {
     logError('You must specify a hostname.');
     process.exit(1);
-  } else if (args.bodyString && args.bodyPath) {
-    logError('bodyString and bodyPath can\'t be present simultaneously');
+  }
+
+  if (args.body && args.bodyPath) {
+    logError('body and bodyPath can\'t be present simultaneously');
     process.exit(1);
   }
 
@@ -109,7 +113,7 @@ function argsFromCommandLine() {
     headers: parseArgument(args.header),
     formFields: parseArgument(args.formField),
     formFiles: parseArgument(args.formFile),
-    bodyString: args.bodyString,
+    bodyString: args.body,
     bodyPath: args.bodyPath,
     requestMethod: args.method || DEFAULT_REQUEST_METHOD,
     requestCount: args.count || DEFAULT_REQUEST_COUNT,
