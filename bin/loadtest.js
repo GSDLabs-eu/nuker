@@ -73,7 +73,7 @@ async function argsFromFile() {
   };
   configFile.tests.forEach((test) => {
     config.tests.push({
-      apiUrl: normalizeUrl(configFile.host, test.path || ''),
+      apiUrl: normalizeUrl(configFile.host, test.path),
       query: test.query,
       formFields: test.formFields,
       formFiles: test.formFiles,
