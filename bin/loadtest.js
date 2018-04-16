@@ -71,20 +71,18 @@ async function argsFromFile() {
     outputPath: configFile.outputPath || DEFAULT_OUTPUT_PATH,
     tests: [],
   };
-  configFile.tests.forEach((test) => {
-    config.tests.push({
-      apiUrl: normalizeUrl(configFile.host, test.path),
-      query: test.query,
-      formFields: test.formFields,
-      formFiles: test.formFiles,
-      bodyString: test.bodyString,
-      bodyPath: test.bodyPath,
-      headers: test.headers,
-      requestMethod: test.requestMethod || DEFAULT_REQUEST_METHOD,
-      requestCount: test.requestCount || DEFAULT_REQUEST_COUNT,
-      testDurationSeconds: test.testDurationSeconds || DEFAULT_TEST_DURATION,
-    });
-  });
+  config.tests = configFile.tests.map(test => ({
+    apiUrl: normalizeUrl(configFile.host, test.path),
+    query: test.query,
+    formFields: test.formFields,
+    formFiles: test.formFiles,
+    bodyString: test.bodyString,
+    bodyPath: test.bodyPath,
+    headers: test.headers,
+    requestMethod: test.requestMethod || DEFAULT_REQUEST_METHOD,
+    requestCount: test.requestCount || DEFAULT_REQUEST_COUNT,
+    testDurationSeconds: test.testDurationSeconds || DEFAULT_TEST_DURATION,
+  }));
   return config;
 }
 

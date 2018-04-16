@@ -1,8 +1,7 @@
 {
   "parser": "babel-eslint",
   "env": {
-    "es6": true,
-    "browser": true
+    "es6": true
   },
   "parserOptions": {"ecmaVersion": 2017},
   "plugins": ["node"],
@@ -18,7 +17,12 @@
         "ignoreComments": true
       }
     ],
-    "no-restricted-syntax": 0,
+    "no-restricted-syntax": [
+      "error",
+      "ForInStatement",
+      "LabeledStatement",
+      "WithStatement"
+    ],
     "no-await-in-loop": 0
   }
 }

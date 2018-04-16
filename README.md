@@ -23,8 +23,6 @@ The following arguments are available:
 * **--header**          Specify headers to send the request with (e.g.: `-h Accept-Charset=utf-8, -h Accept-Language=en-US`)
 * **--verbose**         Extended logging during execution
 * **--outpath**         Specify the path of the output file (e.g.: `--outpath folder/filename.html`). Folder must exist in your file system.
-* **--header**          Specify headers to send the request with (e.g.: `-h Accept-Charset=utf-8, -h Accept-Language= en-US`)
-
 
 Config file:
 

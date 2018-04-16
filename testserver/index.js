@@ -1,4 +1,4 @@
-const Hapi = require('hapi');
+const Hapi = require('hapi'); // eslint-disable-line import/no-extraneous-dependencies
 const { wait } = require('../lib/utils');
 const { log, logError } = require('../lib/logger');
 
