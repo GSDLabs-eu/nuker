@@ -12,7 +12,7 @@ Command line:
 The following arguments are available:
 * -h    **Hostname**    [Mandatory] Specify the hostname (e.g.: `-h http://localhost:port`, `-h https://myhost`, `-h myhost:port`)
 * -p    **Path**        Specify the endpoint path (e.g.: `-p path/morepath`)
-* -q    **Query**       Add (multiple) query parameters in `key=value` format (e.g.: `-q wait=3000 -q responseCode=404`)
+* -q    **Query**       Add (multiple) query parameters in `key=value` format (e.g.: `-q wait=3000 -q statusCode=404`)
 * -m    **Method**      Request method (e.g.: `-m POST`)
 * -f    **Form field**  Add form field(s) (`-f field=value -f anotherfield=anothervalue`)
 * -F    **Form file**   Path of the file(s) to append if you are sending FormData (`-F file=image.jpg`, where 'file' will be the field in the FormData and 'image.jpg' is the file path)
@@ -23,6 +23,7 @@ The following arguments are available:
 * **--header**          Specify headers to send the request with (e.g.: `-h Accept-Charset=utf-8, -h Accept-Language=en-US`)
 * **--verbose**         Extended logging during execution
 * **--outpath**         Specify the path of the output file (e.g.: `--outpath folder/filename.html`). Folder must exist in your file system.
+* **--timeout**         Specify request timeout in milliseconds. Default setting is 20000ms. If TCP connection cannot be established, this will be overwritten by OS default.
 
 Config file:
 
@@ -39,4 +40,4 @@ You can add multiple tests to the the config file, they will be executed sequent
 The repo contains a basic test server with configurable response times and codes.
 Use `npm run server` to start on `localhost:4343`.
 
-You can configure the responses with query strings, e.g. `?wait=3000&responseCode=202` will delay a 202 response by 3000ms. If not specified otherwise, a 200 response will be returned.
+You can configure the responses with query strings, e.g. `?wait=3000&statusCode=202` will delay a 202 response by 3000ms. If not specified otherwise, a 200 response will be returned.

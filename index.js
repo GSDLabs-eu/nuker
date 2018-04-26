@@ -1,28 +1,46 @@
 const { makeRequests } = require('./lib/makeRequests');
 const { logVerbose } = require('./lib/logger');
 
+function buildChartData(results) {
+  const chartData = {
+    responseTimeAxis: [],
+    errorAxis: [],
+    errorCount: 0,
+  };
+
+  results.forEach((result) => {
+    let { responseTime } = result;
+
+    if (!result.success) {
+      responseTime = null;
+      chartData.errorCount += 1;
+    }
+
+    chartData.responseTimeAxis.push(responseTime);
+    chartData.errorAxis.push(chartData.errorCount);
+  });
+  return chartData;
+}
+
 async function runTest(test) {
   const response = await makeRequests(test);
-  const responseTimes = Object.values(response.successful);
-  const failedCount = Object.keys(response.failed).length;
+  const chartData = buildChartData(response);
+  const filteredResponseTimes = chartData.responseTimeAxis.filter(x => !!x);
+  const hasResponseTimes = !!filteredResponseTimes.length;
 
-  const hasResponseTimes = !!responseTimes.length;
-
-  const responseData = {
+  Object.assign(chartData, {
     requestCount: test.requestCount,
     testDurationSeconds: test.testDurationSeconds,
     apiUrl: test.apiUrl,
-    responseTimes,
     averageResponseTime: hasResponseTimes ?
-      (responseTimes.reduce((a, b) => a + b) / responseTimes.length).toFixed(0) : 0,
-    slowestResponse: hasResponseTimes ? Math.max(...responseTimes) : 0,
-    fastestResponse: hasResponseTimes ? Math.min(...responseTimes) : 0,
-    failedCount,
-  };
+      (filteredResponseTimes.reduce((a, b) => a + b) / filteredResponseTimes.length).toFixed(0) : 0,
+    slowestResponse: hasResponseTimes ? Math.max(...filteredResponseTimes) : 0,
+    fastestResponse: hasResponseTimes ? Math.min(...filteredResponseTimes) : 0,
+  });
 
-  logVerbose(`Successful: ${responseData.responseTimes.length}`);
-  logVerbose(`Failed: ${failedCount}`);
-  return responseData;
+  logVerbose(`Successful: ${filteredResponseTimes.length}`);
+  logVerbose(`Failed: ${chartData.errorCount}`);
+  return chartData;
 }
 
 module.exports = { runTest };

@@ -3,34 +3,18 @@
   "outputPath": "",
   "tests": [{
     "path": "",
-    "query": {},
-    "requestMethod": "POST",
-    "formFields": {
-      "name": "Samoa Joe",
-      "occupation": "wrestler"
+    "query": {
+      "wait": 5000
     },
+    "requestMethod": "POST",
     "formFiles": {
       "file": "examples/example.jpg"
     },
     "body": "",
     "bodyPath": "",
-    "requestCount": 5,
-    "testDurationSeconds": 5,
-    "headers": {}
-  },
-  {
-    "path": "",
-    "query": {},
-    "requestMethod": "POST",
-    "formFields": {
-      "name": "The Rock",
-      "occupation": "actor"
-    },
-    "formFiles": {},
-    "body": "",
-    "bodyPath": "",
-    "requestCount": 5,
-    "testDurationSeconds": 5,
-    "headers": {}
+    "requestCount": 10,
+    "testDurationSeconds": 10,
+    "headers": {},
+    "timeout": 20000
   }]  
 }

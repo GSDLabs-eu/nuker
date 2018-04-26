@@ -13,6 +13,7 @@ const DEFAULT_REQUEST_COUNT = 10;
 const DEFAULT_TEST_DURATION = 10;
 const DEFAULT_OUTPUT_PATH = './results.html';
 const DEFAULT_REQUEST_METHOD = 'GET';
+const DEFAULT_TIMEOUT = 20000;
 
 const argumentDefinitions = [
   { name: 'host', alias: 'h', type: String },
@@ -44,6 +45,7 @@ const argumentDefinitions = [
   { name: 'config', type: String },
   { name: 'outpath', type: String },
   { name: 'header', type: String, multiple: true },
+  { name: 'timeout', type: Number },
 ];
 const args = commandLineArgs(argumentDefinitions);
 initLogger(args.verbose);
@@ -82,6 +84,7 @@ async function argsFromFile() {
     requestMethod: test.requestMethod || DEFAULT_REQUEST_METHOD,
     requestCount: test.requestCount || DEFAULT_REQUEST_COUNT,
     testDurationSeconds: test.testDurationSeconds || DEFAULT_TEST_DURATION,
+    timeout: test.timeout || DEFAULT_TIMEOUT,
   }));
   return config;
 }
@@ -122,6 +125,7 @@ function argsFromCommandLine() {
       requestMethod: args.method || DEFAULT_REQUEST_METHOD,
       requestCount: args.count || DEFAULT_REQUEST_COUNT,
       testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
+      timeout: args.timeout || DEFAULT_TIMEOUT,
     }],
   };
   return config;

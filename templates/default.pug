@@ -1,9 +1,13 @@
+style.
+    body {
+        font-family: "Open Sans", Arial, sans-serif;
+    }
 div.wrapper
   each result, index in locals.data
     h1 URI: #{result.apiUrl}
     div
       p Results of #{result.requestCount} requests sent over #{result.testDurationSeconds} seconds 
-      p #{result.failedCount} requests failed
+      p #{result.errorCount} requests failed
       p Slowest response time was #{result.slowestResponse}ms
       p Fastest response time was #{result.fastestResponse}ms
       p Average response time was #{result.averageResponseTime}ms
