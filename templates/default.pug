@@ -3,14 +3,14 @@ style.
         font-family: "Open Sans", Arial, sans-serif;
     }
 div.wrapper
-  each result, index in locals.data
-    h1 URI: #{result.apiUrl}
+  each output, index in locals.data
+    h1 URI: #{output.apiUrl}
     div
-      p Results of #{result.requestCount} requests sent over #{result.testDurationSeconds} seconds 
-      p #{result.errorCount} requests failed
-      p Slowest response time was #{result.slowestResponse}ms
-      p Fastest response time was #{result.fastestResponse}ms
-      p Average response time was #{result.averageResponseTime}ms
+      p Results of #{output.requestCount} requests sent over #{output.testDurationSeconds} seconds 
+      p #{output.errorCount} requests failed
+      p Slowest response time was #{output.slowestResponseTime}ms
+      p Fastest response time was #{output.fastestResponseTime}ms
+      p Average response time was #{output.averageResponseTime}ms
     div(class="chart")        
       canvas(id="chartPic"+index width="400" height="400")
 

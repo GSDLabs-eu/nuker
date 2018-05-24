@@ -4,7 +4,7 @@
   "tests": [{
     "path": "",
     "query": {
-      "wait": 5000
+      "wait": 1000
     },
     "requestMethod": "POST",
     "formFiles": {
@@ -14,7 +14,6 @@
     "bodyPath": "",
     "requestCount": 10,
     "testDurationSeconds": 10,
-    "headers": {},
-    "timeout": 20000
+    "headers": {}
   }]  
 }

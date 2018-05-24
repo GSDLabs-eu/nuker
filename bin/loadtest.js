@@ -13,7 +13,7 @@ const DEFAULT_REQUEST_COUNT = 10;
 const DEFAULT_TEST_DURATION = 10;
 const DEFAULT_OUTPUT_PATH = './results.html';
 const DEFAULT_REQUEST_METHOD = 'GET';
-const DEFAULT_TIMEOUT = 20000;
+const DEFAULT_TIMEOUT = 0;
 
 const argumentDefinitions = [
   { name: 'host', alias: 'h', type: String },
@@ -133,11 +133,11 @@ function argsFromCommandLine() {
 
 async function loadTest() {
   const config = args.config ? await argsFromFile() : argsFromCommandLine();
-  const responseData = [];
+  const output = [];
   for (const test of config.tests) {
-    responseData.push(await runTest(test));
+    output.push(await runTest(test));
   }
-  exportResults(responseData, config.outputPath);
+  exportResults(output, config.outputPath);
 }
 
 loadTest();

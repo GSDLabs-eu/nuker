@@ -1,46 +1,56 @@
 const { makeRequests } = require('./lib/makeRequests');
 const { logVerbose } = require('./lib/logger');
 
-function buildChartData(results) {
-  const chartData = {
-    responseTimeAxis: [],
-    errorAxis: [],
+function buildOutput(results) {
+  const output = {
+    timeline: {
+      responseTimes: [],
+      errorCounts: [],
+    },
+    successCount: 0,
     errorCount: 0,
+    fastestResponseTime: Number.POSITIVE_INFINITY,
+    slowestResponseTime: 0,
+    averageResponseTime: 0,
   };
-
+  let totalResponseTime = 0;
   results.forEach((result) => {
     let { responseTime } = result;
 
     if (!result.success) {
       responseTime = null;
-      chartData.errorCount += 1;
+      output.errorCount += 1;
     }
 
-    chartData.responseTimeAxis.push(responseTime);
-    chartData.errorAxis.push(chartData.errorCount);
+    if (result.success) {
+      output.successCount += 1;
+      if (responseTime > output.slowestResponseTime) output.slowestResponseTime = responseTime;
+      if (responseTime < output.fastestResponseTime) output.fastestResponseTime = responseTime;
+      totalResponseTime += responseTime;
+    }
+
+    if (output.successCount === 0) {
+      output.fastestResponseTime = 0;
+    }
+
+    output.timeline.responseTimes.push(responseTime);
+    output.timeline.errorCounts.push(output.errorCount);
   });
-  return chartData;
+  if (output.successCount !== 0) output.averageResponseTime = Math.round(totalResponseTime / output.successCount);
+  return output;
 }
 
 async function runTest(test) {
-  const response = await makeRequests(test);
-  const chartData = buildChartData(response);
-  const filteredResponseTimes = chartData.responseTimeAxis.filter(x => !!x);
-  const hasResponseTimes = !!filteredResponseTimes.length;
-
-  Object.assign(chartData, {
+  const output = buildOutput(await makeRequests(test));
+  Object.assign(output, {
+    apiUrl: test.apiUrl,
     requestCount: test.requestCount,
     testDurationSeconds: test.testDurationSeconds,
-    apiUrl: test.apiUrl,
-    averageResponseTime: hasResponseTimes ?
-      (filteredResponseTimes.reduce((a, b) => a + b) / filteredResponseTimes.length).toFixed(0) : 0,
-    slowestResponse: hasResponseTimes ? Math.max(...filteredResponseTimes) : 0,
-    fastestResponse: hasResponseTimes ? Math.min(...filteredResponseTimes) : 0,
   });
 
-  logVerbose(`Successful: ${filteredResponseTimes.length}`);
-  logVerbose(`Failed: ${chartData.errorCount}`);
-  return chartData;
+  logVerbose(`Successful: ${output.successCount}`);
+  logVerbose(`Failed: ${output.errorCount}`);
+  return output;
 }
 
 module.exports = { runTest };
