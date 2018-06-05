@@ -13,7 +13,7 @@ const DEFAULT_REQUEST_COUNT = 10;
 const DEFAULT_TEST_DURATION = 10;
 const DEFAULT_OUTPUT_PATH = './results.html';
 const DEFAULT_REQUEST_METHOD = 'GET';
-const DEFAULT_TIMEOUT = 0;
+const DEFAULT_TIMEOUT = 120000;
 
 const argumentDefinitions = [
   { name: 'host', alias: 'h', type: String },
