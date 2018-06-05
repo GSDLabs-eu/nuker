@@ -4,39 +4,59 @@ const { logVerbose } = require('./lib/logger');
 function buildOutput(results) {
   const output = {
     timeline: {
-      responseTimes: [],
+      successfulResponseTimes: [],
       errorCounts: [],
     },
     successCount: 0,
-    errorCount: 0,
-    fastestResponseTime: Number.POSITIVE_INFINITY,
-    slowestResponseTime: 0,
-    averageResponseTime: 0,
+    networkErrorCount: 0,
+    httpErrorCount: 0,
   };
-  let totalResponseTime = 0;
-  results.forEach((result) => {
-    let { responseTime } = result;
 
-    if (!result.success) {
-      responseTime = null;
-      output.errorCount += 1;
-    }
+  let aggrResponseTime = 0;
+  let aggrErrorResponseTime = 0;
+  let aggrTotalResponseTime = 0;
+
+  results.forEach((result) => {
+    const { responseTime } = result;
 
     if (result.success) {
       output.successCount += 1;
-      if (responseTime > output.slowestResponseTime) output.slowestResponseTime = responseTime;
-      if (responseTime < output.fastestResponseTime) output.fastestResponseTime = responseTime;
-      totalResponseTime += responseTime;
+      output.fastestResponseTime = Math.min(responseTime, output.fastestResponseTime || Infinity);
+      output.slowestResponseTime = Math.max(responseTime, output.slowestResponseTime || 0);
+      aggrResponseTime += responseTime;
+    } else if (responseTime) { // A non-2xx http response
+      output.httpErrorCount += 1;
+      output.fastestErrorResponseTime = Math.min(responseTime, output.fastestErrorResponseTime || Infinity);
+      output.slowestErrorResponseTime = Math.max(responseTime, output.slowestErrorResponseTime || 0);
+      aggrErrorResponseTime += responseTime;
+    } else { // no response received
+      output.networkErrorCount += 1;
     }
 
-    if (output.successCount === 0) {
-      output.fastestResponseTime = 0;
-    }
+    output.errorCount = output.httpErrorCount + output.networkErrorCount;
+    aggrTotalResponseTime = aggrResponseTime + aggrErrorResponseTime;
 
-    output.timeline.responseTimes.push(responseTime);
+    output.timeline.successfulResponseTimes.push(result.success ? responseTime : null);
     output.timeline.errorCounts.push(output.errorCount);
   });
-  if (output.successCount !== 0) output.averageResponseTime = Math.round(totalResponseTime / output.successCount);
+
+  // Totals
+  output.fastestTotalResponseTime =
+    Math.min(output.fastestResponseTime || Infinity, output.fastestErrorResponseTime || Infinity);
+  output.slowestTotalResponseTime =
+    Math.max(output.slowestResponseTime || 0, output.slowestErrorResponseTime || 0);
+
+  // Averages
+  if (output.successCount) {
+    output.averageResponseTime = Math.round(aggrResponseTime / output.successCount);
+  }
+  if (output.httpErrorCount) {
+    output.averageErrorResponseTime = Math.round(aggrErrorResponseTime / output.httpErrorCount);
+  }
+  if (output.successCount || output.httpErrorCount) {
+    output.averageTotalResponseTime = Math.round(aggrTotalResponseTime / (output.successCount + output.httpErrorCount));
+  }
+
   return output;
 }
 

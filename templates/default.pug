@@ -8,9 +8,9 @@ div.wrapper
     div
       p Results of #{output.requestCount} requests sent over #{output.testDurationSeconds} seconds 
       p #{output.errorCount} requests failed
-      p Slowest response time was #{output.slowestResponseTime}ms
-      p Fastest response time was #{output.fastestResponseTime}ms
-      p Average response time was #{output.averageResponseTime}ms
+      p Slowest successful response time was #{output.slowestResponseTime}ms
+      p Fastest successful response time was #{output.fastestResponseTime}ms
+      p Average successful response time was #{output.averageResponseTime}ms
     div(class="chart")        
       canvas(id="chartPic"+index width="400" height="400")
 
