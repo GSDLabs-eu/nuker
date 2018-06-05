@@ -23,7 +23,7 @@ The following arguments are available:
 * **--header**          Specify headers to send the request with (e.g.: `-h Accept-Charset=utf-8, -h Accept-Language=en-US`)
 * **--verbose**         Extended logging during execution
 * **--outpath**         Specify the path of the output file (e.g.: `--outpath folder/filename.html`). Folder must exist in your file system.
-* **--timeout**         Specify request timeout in milliseconds. Default setting is 20000ms. If TCP connection cannot be established, this will be overwritten by OS default.
+* **--timeout**         Specify request timeout in milliseconds. Default setting is 120 seconds. If TCP connection cannot be established, this will be overwritten by OS default.
 
 Config file:
 
