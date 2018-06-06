@@ -6,11 +6,11 @@ div.wrapper
   each output, index in locals.data
     h1 URI: #{output.apiUrl}
     div
-      p Results of #{output.requestCount} requests sent over #{output.testDurationSeconds} seconds 
+      p #{output.requestCount} requests sent over #{output.testDurationSeconds} seconds 
       p #{output.errorCount} requests failed
-      p Slowest successful response time was #{output.slowestResponseTime}ms
-      p Fastest successful response time was #{output.fastestResponseTime}ms
-      p Average successful response time was #{output.averageResponseTime}ms
+      p Average successful response time: #{output.averageResponseTime}ms
+      p Slowest successful response time: #{output.slowestResponseTime}ms
+      p Fastest successful response time: #{output.fastestResponseTime}ms
     div(class="chart")        
       canvas(id="chartPic"+index width="400" height="400")
 
