@@ -152,7 +152,7 @@ function initProgressBar() {
 async function runTests(args) {
   // Init
 
-  logger.init({ errorLogPath: ERROR_LOG_PATH });
+  await logger.init({ errorLogPath: ERROR_LOG_PATH });
 
   initProgressBar();
 
