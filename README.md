@@ -21,7 +21,6 @@ The following arguments are available:
 * -c    **Count**       Number of requests to send, default is 10
 * -d    **Duration**    Duration of the test in seconds, default is 10
 * **--header**          Specify headers to send the request with (e.g.: `-h Accept-Charset=utf-8, -h Accept-Language=en-US`)
-* **--verbose**         Extended logging during execution
 * **--outpath**         Specify the path of the output file (e.g.: `--outpath folder/filename.html`). Folder must exist in your file system.
 * **--timeout**         Specify request timeout in milliseconds. Default setting is 120 seconds. If TCP connection cannot be established, this will be overwritten by OS default.
 
@@ -30,7 +29,6 @@ Config file:
 Same options as command line arguments, stored in a JSON. See in 'examples' folder.
 Run with `loadtest --config ./examples/config.json`
 You can add multiple tests to the the config file, they will be executed sequentially.
-`--verbose` is also available when using a config file.
 
 3) Results will be logged to a results.html file in the root directory.
 

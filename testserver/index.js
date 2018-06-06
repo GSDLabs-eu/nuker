@@ -1,6 +1,5 @@
 const Hapi = require('hapi'); // eslint-disable-line import/no-extraneous-dependencies
 const { wait } = require('../lib/utils');
-const { log, logError } = require('../lib/logger');
 
 const DEFAULT_TIMEOUT = 0;
 const DEFAULT_STATUS_CODE = 200;
@@ -31,10 +30,10 @@ async function start() {
   try {
     await server.start();
   } catch (err) {
-    logError(err);
+    console.log(err);
     process.exit(1);
   }
-  log(`Server running at: ${server.info.uri}`);
+  console.log(`Server running at: ${server.info.uri}`);
 }
 
 start();

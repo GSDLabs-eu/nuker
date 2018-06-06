@@ -7,6 +7,7 @@
     "node": ">=7.6.0"
   },
   "scripts": {
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node ./testserver/index.js"
   },
@@ -27,6 +28,7 @@
   },
   "dependencies": {
     "chart.js": "^2.7.1",
+    "cli-progress": "^2.0.0",
     "command-line-args": "^5.0.1",
     "mime-types": "^2.1.17",
     "pug": "^2.0.0-rc.4",

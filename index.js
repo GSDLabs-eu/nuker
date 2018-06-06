@@ -1,8 +1,10 @@
 const { makeRequests } = require('./lib/makeRequests');
 const { buildOutput } = require('./lib/buildOutput');
-const { logVerbose } = require('./lib/logger');
+const events = require('./lib/events');
 
-async function runTest(test) {
+async function loadTest(test) {
+  events.emit('started', test);
+
   const output = buildOutput(await makeRequests(test));
   Object.assign(output, {
     apiUrl: test.apiUrl,
@@ -10,9 +12,8 @@ async function runTest(test) {
     testDurationSeconds: test.testDurationSeconds,
   });
 
-  logVerbose(`Successful: ${output.successCount}`);
-  logVerbose(`Failed: ${output.errorCount}`);
+  events.emit('completed', output);
   return output;
 }
 
-module.exports = { runTest };
+module.exports = loadTest;

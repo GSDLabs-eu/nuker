@@ -1,19 +1,20 @@
 #!/usr/bin/env node
 
 const commandLineArgs = require('command-line-args');
-const { runTest } = require('../index');
+const cliProgress = require('cli-progress');
+
+const loadTest = require('../index');
 const { exportResults } = require('../lib/exportResults');
-const {
-  normalizeUrl,
-  readFile,
-} = require('../lib/utils');
-const { logError, initLogger } = require('../lib/logger');
+const { normalizeUrl, readFile } = require('../lib/utils');
+const logger = require('../lib/logger');
+const events = require('../lib/events');
 
 const DEFAULT_REQUEST_COUNT = 10;
 const DEFAULT_TEST_DURATION = 10;
 const DEFAULT_OUTPUT_PATH = './results.html';
 const DEFAULT_REQUEST_METHOD = 'GET';
 const DEFAULT_TIMEOUT = 120000;
+const ERROR_LOG_PATH = './error.log';
 
 const argumentDefinitions = [
   { name: 'host', alias: 'h', type: String },
@@ -41,31 +42,28 @@ const argumentDefinitions = [
   { name: 'bodyPath', alias: 'B', type: String },
   { name: 'count', alias: 'c', type: Number },
   { name: 'duration', alias: 't', type: Number },
-  { name: 'verbose', type: Boolean },
   { name: 'config', type: String },
   { name: 'outpath', type: String },
   { name: 'header', type: String, multiple: true },
   { name: 'timeout', type: Number },
 ];
-const args = commandLineArgs(argumentDefinitions);
-initLogger(args.verbose);
 
-async function argsFromFile() {
+async function argsFromFile(args) {
   let configFile = {};
   try {
     configFile = JSON.parse(await readFile(args.config));
   } catch (error) {
-    logError('Could not read config file.');
+    logger.log('Could not read config file.');
     process.exit(1);
   }
 
   if (!configFile.host) {
-    logError('You must specify a hostname.');
+    logger.log('You must specify a hostname.');
     process.exit(1);
   }
 
   if (configFile.body && configFile.bodyPath) {
-    logError('body and bodyPath can\'t be present simultaneously');
+    logger.log('body and bodyPath can\'t be present simultaneously');
     process.exit(1);
   }
 
@@ -89,14 +87,14 @@ async function argsFromFile() {
   return config;
 }
 
-function argsFromCommandLine() {
+function argsFromCommandLine(args) {
   if (!args.host) {
-    logError('You must specify a hostname.');
+    logger.log('You must specify a hostname.');
     process.exit(1);
   }
 
   if (args.body && args.bodyPath) {
-    logError('body and bodyPath can\'t be present simultaneously');
+    logger.log('body and bodyPath can\'t be present simultaneously');
     process.exit(1);
   }
 
@@ -131,13 +129,58 @@ function argsFromCommandLine() {
   return config;
 }
 
-async function loadTest() {
-  const config = args.config ? await argsFromFile() : argsFromCommandLine();
-  const output = [];
-  for (const test of config.tests) {
-    output.push(await runTest(test));
-  }
-  exportResults(output, config.outputPath);
+function initProgressBar() {
+  const progressBar = new cliProgress.Bar({
+    format: '{title} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | Errors: {errorCount}',
+  }, cliProgress.Presets.shades_classic);
+
+  events.on('started', (test) => {
+    progressBar.start(test.requestCount, 0, {
+      errorCount: 0,
+      title: test.apiUrl,
+    });
+  });
+  events.on('progress', (response) => {
+    const { errorCount } = progressBar.payload;
+    progressBar.increment(1, { errorCount: response.success ? errorCount : errorCount + 1 });
+  });
+  events.on('completed', () => {
+    progressBar.stop();
+  });
 }
 
-loadTest();
+async function runTests(args) {
+  // Init
+
+  logger.init({ errorLogPath: ERROR_LOG_PATH });
+
+  initProgressBar();
+
+  events.on('requestFailed', (seq, config, err) => {
+    logger.error(`Request ${seq} to ${config.apiUrl} failed: ${err.message}`);
+  });
+
+  // Run tests
+
+  logger.log('Running tests.');
+
+  const config = args.config ? await argsFromFile(args) : argsFromCommandLine(args);
+  const output = [];
+  for (const test of config.tests) {
+    output.push(await loadTest(test));
+  }
+
+  // Export results
+
+  logger.log('Exporting results.');
+  exportResults(output, config.outputPath);
+
+  // Teardown
+
+  logger.log(`Results saved to "${config.outputPath}"`);
+  logger.log(`Error log saved to "${ERROR_LOG_PATH}"`);
+  logger.log('Done.');
+  logger.teardown();
+}
+
+runTests(commandLineArgs(argumentDefinitions));
