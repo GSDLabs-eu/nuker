@@ -1,39 +1,56 @@
 {
-  "name": "gsd-loadtest",
+  "name": "nuker",
   "version": "0.4.0",
-  "description": "command line tool for measuring form data response times",
-  "main": "index.js",
+  "description": "Super simple HTTP load test library and CLI. Sends n requests spread evenly over m seconds and charts the response times. Supports form-data.",
+  "keywords": [
+    "testing",
+    "load",
+    "load test",
+    "performance",
+    "http",
+    "request",
+    "chart"
+  ],
+  "author": "David Bater <david.bater@gsdlabs.eu>",
+  "contributors": [
+    "Marton Csikos <marton.csikos@gmail.com>"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GSDLabs-eu/nuker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GSDLabs-eu/nuker/issues"
+  },
   "engines": {
     "node": ">=7.6.0"
   },
+  "bin": "./bin/loadtest.js",
+  "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node ./testserver/index.js"
   },
-  "bin": {
-    "loadtest": "./bin/loadtest.js"
-  },
-  "author": "David Bater <david.bater@gsdlabs.eu>",
-  "license": "UNLICENSED",
-  "devDependencies": {
-    "babel-eslint": "^8.2.1",
-    "babel-preset-airbnb": "^2.4.0",
-    "babel-preset-env": "^1.6.1",
-    "eslint": "^4.15.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^5.2.1",
-    "hapi": "^17.2.0"
-  },
   "dependencies": {
-    "chart.js": "^2.7.1",
+    "chart.js": "^2.0.0",
     "cli-progress": "^2.0.0",
-    "command-line-args": "^5.0.1",
-    "mime-types": "^2.1.17",
-    "pug": "^2.0.0-rc.4",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2",
-    "urijs": "^1.19.0"
+    "command-line-args": "^5.0.0",
+    "mime-types": "^2.0.0",
+    "pug": "^2.0.0",
+    "request": "^2.0.0",
+    "request-promise": "^4.0.0",
+    "urijs": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.0",
+    "babel-preset-airbnb": "^2.0.0",
+    "babel-preset-env": "^1.0.0",
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-plugin-import": "^2.0.0",
+    "eslint-plugin-node": "^5.0.0",
+    "hapi": "^17.0.0"
   }
 }
