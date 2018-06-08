@@ -5,7 +5,7 @@ const cliProgress = require('cli-progress');
 
 const loadTest = require('../index');
 const { exportResults } = require('../lib/exportResults');
-const { normalizeUrl, readFile } = require('../lib/utils');
+const { normalizeUrl, readFile, compactObj } = require('../lib/utils');
 const logger = require('../lib/logger');
 const events = require('../lib/events');
 
@@ -16,116 +16,105 @@ const DEFAULT_REQUEST_METHOD = 'GET';
 const DEFAULT_TIMEOUT = 120000;
 const ERROR_LOG_PATH = './error.log';
 
-const argumentDefinitions = [
-  { name: 'host', alias: 'h', type: String },
-  { name: 'path', alias: 'p', type: String },
-  {
-    name: 'query',
-    alias: 'q',
-    type: String,
-    multiple: true,
-  },
-  { name: 'method', alias: 'm', type: String },
-  {
-    name: 'formField',
-    alias: 'f',
-    type: String,
-    multiple: true,
-  },
-  {
-    name: 'formFile',
-    alias: 'F',
-    type: String,
-    multiple: true,
-  },
-  { name: 'body', alias: 'b', type: String },
-  { name: 'bodyPath', alias: 'B', type: String },
-  { name: 'count', alias: 'c', type: Number },
-  { name: 'duration', alias: 't', type: Number },
-  { name: 'config', type: String },
-  { name: 'outpath', type: String },
-  { name: 'header', type: String, multiple: true },
-  { name: 'timeout', type: Number },
+const argumentDefinitions = [{
+  name: 'host', alias: 'H', type: String,
+}, {
+  name: 'count', alias: 'C', type: Number,
+}, {
+  name: 'time', alias: 'T', type: Number,
+}, {
+  name: 'method', alias: 'm', type: String,
+}, {
+  name: 'path', alias: 'p', type: String,
+}, {
+  name: 'query', alias: 'q', type: String, multiple: true,
+}, {
+  name: 'header', alias: 'h', type: String, multiple: true,
+}, {
+  name: 'formField', alias: 'f', type: String, multiple: true,
+}, {
+  name: 'formFile', alias: 'F', type: String, multiple: true,
+}, {
+  name: 'body', alias: 'b', type: String,
+}, {
+  name: 'bodyPath', alias: 'B', type: String,
+}, {
+  name: 'timeout', alias: 't', type: Number,
+}, {
+  name: 'outputPath', alias: 'o', type: String,
+}, {
+  name: 'config', alias: 'c', type: String,
+},
 ];
 
-async function argsFromFile(args) {
-  let configFile = {};
-  try {
-    configFile = JSON.parse(await readFile(args.config));
-  } catch (error) {
-    logger.log('Could not read config file.');
-    process.exit(1);
-  }
+function parseMultiArgument(arg = []) {
+  let parsed;
 
-  if (!configFile.host) {
-    logger.log('You must specify a hostname.');
-    process.exit(1);
-  }
-
-  if (configFile.body && configFile.bodyPath) {
-    logger.log('body and bodyPath can\'t be present simultaneously');
-    process.exit(1);
-  }
-
-  const config = {
-    outputPath: configFile.outputPath || DEFAULT_OUTPUT_PATH,
-    tests: [],
-  };
-  config.tests = configFile.tests.map(test => ({
-    apiUrl: normalizeUrl(configFile.host, test.path),
-    query: test.query,
-    formFields: test.formFields,
-    formFiles: test.formFiles,
-    bodyString: test.bodyString,
-    bodyPath: test.bodyPath,
-    headers: test.headers,
-    requestMethod: test.requestMethod || DEFAULT_REQUEST_METHOD,
-    requestCount: test.requestCount || DEFAULT_REQUEST_COUNT,
-    testDurationSeconds: test.testDurationSeconds || DEFAULT_TEST_DURATION,
-    timeout: test.timeout || DEFAULT_TIMEOUT,
-  }));
-  return config;
-}
-
-function argsFromCommandLine(args) {
-  if (!args.host) {
-    logger.log('You must specify a hostname.');
-    process.exit(1);
-  }
-
-  if (args.body && args.bodyPath) {
-    logger.log('body and bodyPath can\'t be present simultaneously');
-    process.exit(1);
-  }
-
-  // Parses an array of "file=example.jpg" format arguments and returns an object { file: example.jpg }
-  function parseArgument(array = []) {
-    const object = array.reduce((finalObject, next) => {
+  if (arg || arg.length) {
+    parsed = arg.reduce((memo, next) => {
       const [key, value] = next.split('=');
       return {
-        ...finalObject,
+        ...memo,
         [key]: value,
       };
     }, {});
-    return object;
+  }
+  return parsed;
+}
+
+async function parseArguments(args) {
+  let parsedArgs;
+
+  if (args.config) {
+    try {
+      parsedArgs = JSON.parse(await readFile(args.config));
+    } catch (error) {
+      logger.log('Could not read config file.');
+      process.exit(1);
+    }
+  } else {
+    parsedArgs = {
+      host: args.host,
+      outputPath: args.outputPath,
+      tests: [{
+        requestCount: args.count,
+        testDurationSeconds: args.time,
+        requestMethod: args.method,
+        path: args.path,
+        query: parseMultiArgument(args.query),
+        headers: parseMultiArgument(args.header),
+        formFields: parseMultiArgument(args.formField),
+        formFiles: parseMultiArgument(args.formFile),
+        body: args.body,
+        bodyPath: args.bodyPath,
+        timeout: args.timeout,
+      }],
+    };
+  }
+
+  if (!parsedArgs.host) {
+    logger.log('Hostname must be defined.');
+    process.exit(1);
   }
 
   const config = {
-    outputPath: args.outpath || DEFAULT_OUTPUT_PATH,
-    tests: [{
-      apiUrl: normalizeUrl(args.host, args.path),
-      query: parseArgument(args.query),
-      formFields: parseArgument(args.formField),
-      formFiles: parseArgument(args.formFile),
-      bodyString: args.bodyString,
-      bodyPath: args.bodyPath,
-      headers: parseArgument(args.header),
-      requestMethod: args.method || DEFAULT_REQUEST_METHOD,
-      requestCount: args.count || DEFAULT_REQUEST_COUNT,
-      testDurationSeconds: args.duration || DEFAULT_TEST_DURATION,
-      timeout: args.timeout || DEFAULT_TIMEOUT,
-    }],
+    outputPath: parsedArgs.outputPath || DEFAULT_OUTPUT_PATH,
   };
+
+  config.tests = parsedArgs.tests.map(test => compactObj({
+    apiUrl: normalizeUrl(parsedArgs.host, test.path),
+    requestCount: test.requestCount || DEFAULT_REQUEST_COUNT,
+    testDurationSeconds: test.testDurationSeconds || DEFAULT_TEST_DURATION,
+    requestMethod: test.requestMethod || DEFAULT_REQUEST_METHOD,
+    query: test.query,
+    headers: test.headers,
+    formFields: test.formFields,
+    formFiles: test.formFiles,
+    body: test.body,
+    bodyPath: test.bodyPath,
+    timeout: test.timeout || DEFAULT_TIMEOUT,
+  }));
+
   return config;
 }
 
@@ -149,22 +138,21 @@ function initProgressBar() {
   });
 }
 
-async function runTests(args) {
+async function runTests(config) {
   // Init
 
   await logger.init({ errorLogPath: ERROR_LOG_PATH });
 
   initProgressBar();
 
-  events.on('requestFailed', (seq, config, err) => {
-    logger.error(`Request ${seq} to ${config.apiUrl} failed: ${err.message}`);
+  events.on('requestFailed', (seq, test, err) => {
+    logger.error(`Request ${seq} to ${test.apiUrl} failed: ${err.message}`);
   });
 
   // Run tests
 
   logger.log('Running tests.');
 
-  const config = args.config ? await argsFromFile(args) : argsFromCommandLine(args);
   const output = [];
   for (const test of config.tests) {
     output.push(await loadTest(test));
@@ -183,4 +171,6 @@ async function runTests(args) {
   logger.teardown();
 }
 
-runTests(commandLineArgs(argumentDefinitions));
+(async () =>
+  runTests(await parseArguments(commandLineArgs(argumentDefinitions)))
+)();

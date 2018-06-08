@@ -1,41 +1,49 @@
-# Node Load Tester
-Command line tool to measure and display API response times for FormData requests.
+# Nuker
+Super simple HTTP load test library and CLI. Sends n requests spread evenly over m seconds and charts the response times. Supports form-data.
 
-## Usage:
-1) Clone the repo and run `npm install -g`, so you can use the 'loadtest' command.
+## Install
 
-2) Run `loadtest` and specify the target server's hostname, path if required, and some kind of form data (files and/or key-value pairs). You can either do this with command line arguments, or may use a config file.
+```bash
+$ npm i nuker -g
+```
 
+## Usage
 
-Command line:
+```bash
+$ nuker --host www.example.com --count 10 --time 10
+```
 
-The following arguments are available:
-* -h    **Hostname**    [Mandatory] Specify the hostname (e.g.: `-h http://localhost:port`, `-h https://myhost`, `-h myhost:port`)
-* -p    **Path**        Specify the endpoint path (e.g.: `-p path/morepath`)
-* -q    **Query**       Add (multiple) query parameters in `key=value` format (e.g.: `-q wait=3000 -q statusCode=404`)
-* -m    **Method**      Request method (e.g.: `-m POST`)
-* -f    **Form field**  Add form field(s) (`-f field=value -f anotherfield=anothervalue`)
-* -F    **Form file**   Path of the file(s) to append if you are sending FormData (`-F file=image.jpg`, where 'file' will be the field in the FormData and 'image.jpg' is the file path)
-* -b    **Body text**   Text that you want to add to the request body as a string (e.g.: `-b "this might be a JSON as well"`)
-* -B    **Body path**   If you want to add a binary file as a body, specify the path here (e.g.: `-B examples/example.txt`)
-* -c    **Count**       Number of requests to send, default is 10
-* -d    **Duration**    Duration of the test in seconds, default is 10
-* **--header**          Specify headers to send the request with (e.g.: `-h Accept-Charset=utf-8, -h Accept-Language=en-US`)
-* **--outpath**         Specify the path of the output file (e.g.: `--outpath folder/filename.html`). Folder must exist in your file system.
-* **--timeout**         Specify request timeout in milliseconds. Default setting is 120 seconds. If TCP connection cannot be established, this will be overwritten by OS default.
+## Arguments
 
-Config file:
+* `--hostname` `-H` *[required]* - Endpoint (e.g.:  `-p http://foo.bar:8080`)
+* `--count` `-C` - Number of requests to send
+* `--time` `-T` Duration of the test in seconds
+* `--method` `-m`  - Request method (e.g.: `-m POST`)
+* `-path` `-p` - URI path component (e.g.: ` -p foo/bar`)
+* `--guery` `-q` *[multiple]* - URI query component (e.g.: `-q foo=bar -q baz=qux`)
+* `--header` `-h` *[multiple]* - Request header(s) (e.g.: `-h Accept-Charset=utf-8, -h Accept-Language=en-US`)
+* `--formField` `-f` *[multiple]* - Form field(s) (`-f foo=bar -f baz=qux`)
+* `--formFile` `-F`  *[multiple]* - Path of the file(s) to append to *form-data* requests (e.g.: `-F foo="./bar.jpg"`, where "foo" is the key for the field)
+* `--body` `-b` - Raw text content for body (e.g.: `-b "foobar"`)
+* `--bodyPath` `-B` - Path to raw binary content for body (e.g.: `-B "./bar.jpg"`)
+* `--outPutpath` `-o` - Path for the output file (e.g.: `-o ./results.html`).
+* `--timeout` `-t` - Request timeout in milliseconds. Default is 120 seconds. If TCP connection cannot be established, this will be overwritten by OS default.
 
-Same options as command line arguments, stored in a JSON. See in 'examples' folder.
-Run with `loadtest --config ./examples/config.json`
+## Config file
+
+```bash
+$ nuker--config ./examples/config.json
+```
+
+Same options as command line arguments in JSON. See in 'examples' folder.
 You can add multiple tests to the the config file, they will be executed sequentially.
 
-3) Results will be logged to a results.html file in the root directory.
+## Test server
 
+```bash
+$ npm run server
+```
 
-## Test server:
+Basic test server with configurable response times and codes. Default port is `4343`.
 
-The repo contains a basic test server with configurable response times and codes.
-Use `npm run server` to start on `localhost:4343`.
-
-You can configure the responses with query strings, e.g. `?wait=3000&statusCode=202` will delay a 202 response by 3000ms. If not specified otherwise, a 200 response will be returned.
+E.g.: `http://localhost:4343?wait=3000&statusCode=400`

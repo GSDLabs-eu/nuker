@@ -1,19 +1,29 @@
 {
-  "host": "http://localhost:4343",
-  "outputPath": "",
-  "tests": [{
-    "path": "",
-    "query": {
-      "wait": 1000
-    },
-    "requestMethod": "POST",
-    "formFiles": {
-      "file": "examples/example.jpg"
-    },
-    "body": "",
-    "bodyPath": "",
-    "requestCount": 10,
-    "testDurationSeconds": 10,
-    "headers": {}
-  }]  
+  "host": "http://www.example.com",
+  "outputPath": "./output.html",
+  "tests": [
+    {
+      "requestCount": 10,
+      "testDurationSeconds": 10,
+      "requestMethod": "POST",
+      "path": "foo",
+      "query": {
+        "foo": "bar",
+        "baz": "qux"
+      },
+      "headers": {
+        "Accept-Charset": "utf-8",
+        "Accept-Language": "en-US"
+      },
+      "formFields": {
+        "foo": "bar"
+      },
+      "formFiles": {
+        "foo": "./example.jpg"
+      },
+      "body": "foobar",
+      "bodyPath": "./example.jpg",
+      "timeout": 1000
+    }
+  ]
 }
