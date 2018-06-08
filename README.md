@@ -32,10 +32,10 @@ $ nuker --host www.example.com --count 10 --time 10
 ## Config file
 
 ```bash
-$ nuker--config ./examples/config.json
+$ nuker --config ./examples/config.json
 ```
 
-Same options as command line arguments in JSON. See in 'examples' folder.
+Same options as command line arguments in JSON. See in 'examples'.
 You can add multiple tests to the the config file, they will be executed sequentially.
 
 ## Test server
