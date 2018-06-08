@@ -1,5 +1,5 @@
 # Nuker
-Super simple HTTP load test library and CLI. Sends n requests spread evenly over m seconds and charts the response times. Supports form-data.
+Super simple HTTP load test library and CLI. Sends *n* requests spread evenly over *m* seconds and charts the response times. Supports form-data.
 
 ## Install
 
