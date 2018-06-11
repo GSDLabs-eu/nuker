@@ -16,35 +16,21 @@ const DEFAULT_REQUEST_METHOD = 'GET';
 const DEFAULT_TIMEOUT = 120000;
 const ERROR_LOG_PATH = './error.log';
 
-const argumentDefinitions = [{
-  name: 'host', alias: 'H', type: String,
-}, {
-  name: 'count', alias: 'C', type: Number,
-}, {
-  name: 'time', alias: 'T', type: Number,
-}, {
-  name: 'method', alias: 'm', type: String,
-}, {
-  name: 'path', alias: 'p', type: String,
-}, {
-  name: 'query', alias: 'q', type: String, multiple: true,
-}, {
-  name: 'header', alias: 'h', type: String, multiple: true,
-}, {
-  name: 'formField', alias: 'f', type: String, multiple: true,
-}, {
-  name: 'formFile', alias: 'F', type: String, multiple: true,
-}, {
-  name: 'body', alias: 'b', type: String,
-}, {
-  name: 'bodyPath', alias: 'B', type: String,
-}, {
-  name: 'timeout', alias: 't', type: Number,
-}, {
-  name: 'outputPath', alias: 'o', type: String,
-}, {
-  name: 'config', alias: 'c', type: String,
-},
+const argumentDefinitions = [
+  { name: 'host', alias: 'H', type: String },
+  { name: 'count', alias: 'C', type: Number },
+  { name: 'time', alias: 'T', type: Number },
+  { name: 'method', alias: 'm', type: String },
+  { name: 'path', alias: 'p', type: String },
+  { name: 'query', alias: 'q', type: String, multiple: true },
+  { name: 'header', alias: 'h', type: String, multiple: true },
+  { name: 'formField', alias: 'f', type: String, multiple: true },
+  { name: 'formFile', alias: 'F', type: String, multiple: true },
+  { name: 'body', alias: 'b', type: String },
+  { name: 'bodyPath', alias: 'B', type: String },
+  { name: 'timeout', alias: 't', type: Number },
+  { name: 'outputPath', alias: 'o', type: String },
+  { name: 'config', alias: 'c', type: String },
 ];
 
 function parseMultiArgument(arg = []) {
