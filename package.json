@@ -29,9 +29,7 @@
   "bin": "./bin/loadtest.js",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node ./testserver/index.js"
+    "start": "node ./testserver/index.js"
   },
   "dependencies": {
     "chart.js": "^2.0.0",
@@ -42,14 +40,5 @@
     "request": "^2.0.0",
     "request-promise": "^4.0.0",
     "urijs": "^1.0.0"
-  },
-  "devDependencies": {
-    "babel-eslint": "^8.0.0",
-    "babel-preset-airbnb": "^2.0.0",
-    "babel-preset-env": "^1.0.0",
-    "eslint": "^4.0.0",
-    "eslint-config-airbnb-base": "^12.0.0",
-    "eslint-plugin-import": "^2.0.0",
-    "eslint-plugin-node": "^5.0.0",
   }
 }
