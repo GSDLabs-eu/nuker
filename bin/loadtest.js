@@ -4,7 +4,7 @@ const commandLineArgs = require('command-line-args');
 const cliProgress = require('cli-progress');
 
 const loadTest = require('../index');
-const { exportResults } = require('../lib/exportResults');
+const exportResults = require('../lib/exportResults');
 const { normalizeUrl, readFile, compactObj } = require('../lib/utils');
 const logger = require('../lib/logger');
 const events = require('../lib/events');

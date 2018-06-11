@@ -1,5 +1,5 @@
-const { makeRequests } = require('./lib/makeRequests');
-const { buildOutput } = require('./lib/buildOutput');
+const makeRequests = require('./lib/makeRequests');
+const buildOutput = require('./lib/buildOutput');
 const events = require('./lib/events');
 
 async function loadTest(test) {
