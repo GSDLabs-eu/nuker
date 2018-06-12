@@ -32,7 +32,7 @@
     "start": "node ./testserver/index.js"
   },
   "dependencies": {
-    "chart.js": "^2.0.0",
+    "chart.js": "2.7.2",
     "cli-progress": "^2.0.0",
     "command-line-args": "^5.0.0",
     "mime-types": "^2.0.0",
