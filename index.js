@@ -1,6 +1,6 @@
-const makeRequests = require('./lib/makeRequests');
 const buildOutput = require('./lib/buildOutput');
 const events = require('./lib/events');
+const makeRequests = require('./lib/makeRequests');
 
 async function loadTest(test) {
   events.emit('started', test);
