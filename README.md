@@ -10,8 +10,10 @@ $ npm i nuker -g
 ## Usage
 
 ```bash
-$ nuker --host www.example.com --count 10 --time 10
+$ nuker --host www.example.com --count 100 --time 10
 ```
+
+![ScreenShot](examples/screenshot.png)
 
 ## Arguments
 
